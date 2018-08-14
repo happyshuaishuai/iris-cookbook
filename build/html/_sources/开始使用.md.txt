@@ -50,7 +50,7 @@ func main() {
 
 使用main.go（由您决定）保存上面的代码并运行以下命令来启动服务器
 
-![avatar](https://github.com/Yedrops/iris-cookbook/tree/master/build/html/img/overview_screen_1.png)
+![image](https://raw.githubusercontent.com/Yedrops/iris-cookbook/master/build/html/img/overview_screen_1.png)
 
 让我们这样做，这次使用[MVC设计模式](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)。
 

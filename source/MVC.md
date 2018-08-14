@@ -1,7 +1,7 @@
 MVC
 =============
 
-![avatar](https://github.com/Yedrops/iris-cookbook/tree/master/build/html/img/web_mvc_diagram.png)
+![avatar](https://raw.githubusercontent.com/Yedrops/iris-cookbook/master/build/html/img/web_mvc_diagram.png)
 
 Iris拥有一流的MVC（模型视图控制器）模式，你不会在Go世界的任何其他地方找到这些东西，
 
@@ -290,7 +290,7 @@ Iris有一个非常强大和极快的MVC支持，你可以从方法函数返回�
 
 结构取决于您自己的需求。我们无法告诉您如何设计自己的应用程序，但您可以自由地仔细查看下面的一个用例示例
 
-![avatar](https://github.com/Yedrops/iris-cookbook/tree/master/build/html/img/folder_structure.png)
+![image](https://raw.githubusercontent.com/Yedrops/iris-cookbook/master/build/html/img/folder_structure.png)
 
 **数据模型层**
 
