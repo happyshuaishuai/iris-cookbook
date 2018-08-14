@@ -24,7 +24,7 @@ copyright = '2018, TristeYen'
 author = 'TristeYen'
 
 # The short X.Y version
-version = ''
+version = '10.6.5'
 # The full version, including alpha/beta/rc tags
 release = '10.6.5'
 
