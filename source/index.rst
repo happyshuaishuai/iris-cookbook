@@ -1,10 +1,11 @@
-欢迎阅读 iris-cookbook 文档!
+欢迎阅读 iris-cookbook 中文文档!
 =========================================
 
 .. toctree::
    :maxdepth: 2
    :caption: 目录:
 
+   前言
    简介
    特性
    版本
