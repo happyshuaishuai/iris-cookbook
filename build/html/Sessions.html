@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Sessions &mdash; iris-cookbook 10.6.5 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Websockets" href="Websockets.html" />
+    <link rel="prev" title="View" href="View.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iris-cookbook
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="简介.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="特性.html">特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="版本.html">版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="安装.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="开始使用.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Host.html">Hosts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="配置.html">配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Routing.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="错误处理.html">错误处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MVC.html">MVC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="View.html">View</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sessions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Websockets.html">Websockets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iris-cookbook</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Sessions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Sessions.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sessions">
+<span id="sessions"></span><h1>Sessions<a class="headerlink" href="#sessions" title="永久链接至标题">¶</a></h1>
+<p>Iris提供快速，功能齐全且易于使用的 sessions 管理。</p>
+<p>Iris sessions 管理依靠自己的<code class="docutils literal notranslate"><span class="pre">kataras/iris/sessions</span></code>包。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="s">&quot;github.com/kataras/iris/sessions&quot;</span>
+
+<span class="nx">sess</span> <span class="o">:=</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span>
+<span class="nx">sess</span><span class="p">.</span>
+  <span class="nx">ID</span><span class="p">()</span> <span class="kt">string</span>
+  <span class="nx">Get</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kd">interface</span><span class="p">{}</span>
+  <span class="nx">HasFlash</span><span class="p">()</span> <span class="kt">bool</span>
+  <span class="nx">GetFlash</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kd">interface</span><span class="p">{}</span>
+  <span class="nx">GetFlashString</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span>
+  <span class="nx">GetString</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span>
+  <span class="nx">GetInt</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+  <span class="nx">GetInt64</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+  <span class="nx">GetFloat32</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">float32</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+  <span class="nx">GetFloat64</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">float64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+  <span class="nx">GetBoolean</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">bool</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+  <span class="nx">GetAll</span><span class="p">()</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}</span>
+  <span class="nx">GetFlashes</span><span class="p">()</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}</span>
+  <span class="nx">VisitAll</span><span class="p">(</span><span class="nx">cb</span> <span class="kd">func</span><span class="p">(</span><span class="nx">k</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">v</span> <span class="kd">interface</span><span class="p">{}))</span>
+  <span class="nx">Set</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kd">interface</span><span class="p">{})</span>
+  <span class="nx">SetImmutable</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">value</span> <span class="kd">interface</span><span class="p">{})</span>
+  <span class="nx">SetFlash</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kd">interface</span><span class="p">{})</span>
+  <span class="nx">Delete</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
+  <span class="nx">Clear</span><span class="p">()</span>
+  <span class="nx">ClearFlashes</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>此示例将说明如何存储会话中的数据</p>
+<p>除了Iris之外，您不需要任何第三方库，但如果你想要用第三方也是可以的，请记住Iris与标准库完全兼容。按此处可以找到更详细的示例。</p>
+<p>在此示例中，我们将仅允许经过身份验证的用户在访问<code class="docutils literal notranslate"><span class="pre">/secret</span></code>反馈用户想要的结果。
+想要访问<code class="docutils literal notranslate"><span class="pre">/secret</span></code>，首先通过<code class="docutils literal notranslate"><span class="pre">/login</span></code>得到session cookie并保存，此外，他可以访问<code class="docutils literal notranslate"><span class="pre">/logout</span></code>以撤销对我们的秘密消息的访问权限。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// sessions.go</span>
+<span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris/sessions&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="p">(</span>
+    <span class="nx">cookieNameForSessionID</span> <span class="p">=</span> <span class="s">&quot;mycookiesessionnameid&quot;</span>
+    <span class="nx">sess</span>                   <span class="p">=</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span><span class="nx">Cookie</span><span class="p">:</span> <span class="nx">cookieNameForSessionID</span><span class="p">})</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">secret</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Check if user is authenticated</span>
+    <span class="k">if</span> <span class="nx">auth</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">).</span><span class="nx">GetBoolean</span><span class="p">(</span><span class="s">&quot;authenticated&quot;</span><span class="p">);</span> <span class="p">!</span><span class="nx">auth</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">StatusCode</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">StatusForbidden</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Print secret message</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">WriteString</span><span class="p">(</span><span class="s">&quot;The cake is a lie!&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">login</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">session</span> <span class="o">:=</span> <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+
+    <span class="c1">// Authentication goes here</span>
+    <span class="c1">// ...</span>
+
+    <span class="c1">// Set user as authenticated</span>
+    <span class="nx">session</span><span class="p">.</span><span class="nx">Set</span><span class="p">(</span><span class="s">&quot;authenticated&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">logout</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">session</span> <span class="o">:=</span> <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+
+    <span class="c1">// Revoke users authentication</span>
+    <span class="nx">session</span><span class="p">.</span><span class="nx">Set</span><span class="p">(</span><span class="s">&quot;authenticated&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/secret&quot;</span><span class="p">,</span> <span class="nx">secret</span><span class="p">)</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/login&quot;</span><span class="p">,</span> <span class="nx">login</span><span class="p">)</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/logout&quot;</span><span class="p">,</span> <span class="nx">logout</span><span class="p">)</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ go run sessions.go
+
+$ curl -s http://localhost:8080/secret
+Forbidden
+
+$ curl -s -I http://localhost:8080/login
+Set-Cookie: mysessionid=MTQ4NzE5Mz...
+
+$ curl -s --cookie &quot;mysessionid=MTQ4NzE5Mz...&quot; http://localhost:8080/secret
+The cake is a lie!
+</pre></div>
+</div>
+<p><strong>后端存储</strong></p>
+<p>有时您需要一个后端存储，即文件存储或redis存储，这将使您的会话数据在服务器重新启动时保持不变。</p>
+<p>使用单例调用<code class="docutils literal notranslate"><span class="pre">.UseDatabase(database)</span></code>注册数据库非常容易。</p>
+<p>让我们使用 key-value  bolt db 来展示一个简单的栗子。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;time&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris/sessions&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/sessions/sessiondb/boltdb&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">db</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">boltdb</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="s">&quot;./sessions/sessions.db&quot;</span><span class="p">,</span> <span class="mo">0666</span><span class="p">,</span> <span class="s">&quot;users&quot;</span><span class="p">)</span>
+    <span class="c1">// use different go routines to sync the database</span>
+    <span class="nx">db</span><span class="p">.</span><span class="nx">Async</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+
+    <span class="c1">// close and unlock the database when control+C/cmd+C pressed</span>
+    <span class="nx">iris</span><span class="p">.</span><span class="nx">RegisterOnInterrupt</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">db</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+    <span class="p">})</span>
+
+    <span class="nx">sess</span> <span class="o">:=</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+        <span class="nx">Cookie</span><span class="p">:</span>  <span class="s">&quot;sessionscookieid&quot;</span><span class="p">,</span>
+        <span class="nx">Expires</span><span class="p">:</span> <span class="mi">45</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Minute</span><span class="p">,</span> <span class="c1">// &lt;=0 means unlimited life</span>
+    <span class="p">})</span>
+
+    <span class="c1">//</span>
+    <span class="c1">// IMPORTANT:</span>
+    <span class="c1">//</span>
+    <span class="nx">sess</span><span class="p">.</span><span class="nx">UseDatabase</span><span class="p">(</span><span class="nx">db</span><span class="p">)</span>
+
+    <span class="c1">// the rest of the code stays the same.</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;You should navigate to the /set, /get, /delete, /clear,/destroy instead&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/set&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">s</span> <span class="o">:=</span> <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+        <span class="c1">//set session values</span>
+        <span class="nx">s</span><span class="p">.</span><span class="nx">Set</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;iris&quot;</span><span class="p">)</span>
+
+        <span class="c1">//test if setted here</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;All ok session setted to: %s&quot;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nx">GetString</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">))</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/set/{key}/{value}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="o">:=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">),</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;value&quot;</span><span class="p">)</span>
+        <span class="nx">s</span> <span class="o">:=</span> <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+        <span class="c1">// set session values</span>
+        <span class="nx">s</span><span class="p">.</span><span class="nx">Set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+
+        <span class="c1">// test if setted here</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;All ok session setted to: %s&quot;</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nx">GetString</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/get&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// get a specific key, as string, if no found returns just an empty string</span>
+        <span class="nx">name</span> <span class="o">:=</span> <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">).</span><span class="nx">GetString</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;The name on the /set was: %s&quot;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/get/{key}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// get a specific key, as string, if no found returns just an empty string</span>
+        <span class="nx">name</span> <span class="o">:=</span> <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">).</span><span class="nx">GetString</span><span class="p">(</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">))</span>
+
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;The name on the /set was: %s&quot;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/delete&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// delete a specific key</span>
+        <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">).</span><span class="nx">Delete</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/clear&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// removes all entries</span>
+        <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">(</span><span class="nx">ctx</span><span class="p">).</span><span class="nx">Clear</span><span class="p">()</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/destroy&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//destroy, removes the entire session data and cookie</span>
+        <span class="nx">sess</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/update&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// updates expire date with a new date</span>
+        <span class="nx">sess</span><span class="p">.</span><span class="nx">ShiftExpiration</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>创建自定义后端 sessions 存储</strong></p>
+<p>您可以通过实现<code class="docutils literal notranslate"><span class="pre">Database</span> <span class="pre">interface</span></code>来创建自己的后端存储。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Database</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nx">Load</span><span class="p">(</span><span class="nx">sid</span> <span class="kt">string</span><span class="p">)</span> <span class="nx">returns</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="c1">// Values contains the whole memory store, this store</span>
+        <span class="c1">// contains the current, updated from memory calls,</span>
+        <span class="c1">// session data (keys and values). This way</span>
+        <span class="c1">// the database has access to the whole session&#39;s data</span>
+        <span class="c1">// every time.</span>
+        <span class="nx">Values</span> <span class="nx">memstore</span><span class="p">.</span><span class="nx">Store</span>
+        <span class="c1">// on insert it contains the expiration datetime</span>
+        <span class="c1">// on update it contains the new expiration datetime(if updated or the old one)</span>
+        <span class="c1">// on delete it will be zero</span>
+        <span class="c1">// on clear it will be zero</span>
+        <span class="c1">// on destroy it will be zero</span>
+        <span class="nx">Lifetime</span> <span class="nx">LifeTime</span>
+    <span class="p">}</span>
+
+    <span class="nx">Sync</span><span class="p">(</span><span class="nx">accepts</span> <span class="kd">struct</span> <span class="p">{</span>
+        <span class="c1">// Values contains the whole memory store, this store</span>
+        <span class="c1">// contains the current, updated from memory calls,</span>
+        <span class="c1">// session data (keys and values). This way</span>
+        <span class="c1">// the database has access to the whole session&#39;s data</span>
+        <span class="c1">// every time.</span>
+        <span class="nx">Values</span> <span class="nx">memstore</span><span class="p">.</span><span class="nx">Store</span>
+        <span class="c1">// on insert it contains the expiration datetime</span>
+        <span class="c1">// on update it contains the new expiration datetime(if updated or the old one)</span>
+        <span class="c1">// on delete it will be zero</span>
+        <span class="c1">// on clear it will be zero</span>
+        <span class="c1">// on destroy it will be zero</span>
+        <span class="nx">Lifetime</span> <span class="nx">LifeTime</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这就是 boltdb sessions 数据库的样子</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">boltdb</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;bytes&quot;</span>
+    <span class="s">&quot;os&quot;</span>
+    <span class="s">&quot;path/filepath&quot;</span>
+    <span class="s">&quot;runtime&quot;</span>
+    <span class="s">&quot;time&quot;</span>
+
+    <span class="s">&quot;github.com/boltdb/bolt&quot;</span>
+    <span class="s">&quot;github.com/kataras/golog&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/core/errors&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/sessions&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// DefaultFileMode used as the default database&#39;s &quot;fileMode&quot;</span>
+<span class="c1">// for creating the sessions directory path, opening and write</span>
+<span class="c1">// the session boltdb(file-based) storage.</span>
+<span class="kd">var</span> <span class="p">(</span>
+    <span class="nx">DefaultFileMode</span> <span class="p">=</span> <span class="mo">0666</span>
+<span class="p">)</span>
+
+<span class="c1">// Database the BoltDB(file-based) session storage.</span>
+<span class="kd">type</span> <span class="nx">Database</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">table</span> <span class="p">[]</span><span class="kt">byte</span>
+    <span class="c1">// Service is the underline BoltDB database connection,</span>
+    <span class="c1">// it&#39;s initialized at `New` or `NewFromDB`.</span>
+    <span class="c1">// Can be used to get stats.</span>
+    <span class="nx">Service</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">DB</span>
+    <span class="nx">async</span>   <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="p">(</span>
+    <span class="c1">// ErrOptionsMissing returned on `New` when path or tableName are empty.</span>
+    <span class="nx">ErrOptionsMissing</span> <span class="p">=</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="s">&quot;required options are missing&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">// New creates and returns a new BoltDB(file-based) storage</span>
+<span class="c1">// instance based on the &quot;path&quot;.</span>
+<span class="c1">// Path should include the filename and the directory(aka fullpath), i.e sessions/store.db.</span>
+<span class="c1">//</span>
+<span class="c1">// It will remove any old session files.</span>
+<span class="kd">func</span> <span class="nx">New</span><span class="p">(</span><span class="nx">path</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">fileMode</span> <span class="nx">os</span><span class="p">.</span><span class="nx">FileMode</span><span class="p">,</span> <span class="nx">bucketName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Database</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">path</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="o">||</span> <span class="nx">bucketName</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">ErrOptionsMissing</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nx">fileMode</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
+        <span class="nx">fileMode</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">FileMode</span><span class="p">(</span><span class="nx">DefaultFileMode</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// create directories if necessary</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">MkdirAll</span><span class="p">(</span><span class="nx">filepath</span><span class="p">.</span><span class="nx">Dir</span><span class="p">(</span><span class="nx">path</span><span class="p">),</span> <span class="nx">fileMode</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">golog</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;error while trying to create the necessary directories for %s: %v&quot;</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+    <span class="p">}</span>
+
+    <span class="nx">service</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">bolt</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="mo">0600</span><span class="p">,</span>
+        <span class="o">&amp;</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span><span class="nx">Timeout</span><span class="p">:</span> <span class="mi">15</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">golog</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;unable to initialize the BoltDB-based session database: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">NewFromDB</span><span class="p">(</span><span class="nx">service</span><span class="p">,</span> <span class="nx">bucketName</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// NewFromDB same as `New` but accepts an already-created custom boltdb connection instead.</span>
+<span class="kd">func</span> <span class="nx">NewFromDB</span><span class="p">(</span><span class="nx">service</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">DB</span><span class="p">,</span> <span class="nx">bucketName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Database</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">bucketName</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">ErrOptionsMissing</span>
+    <span class="p">}</span>
+    <span class="nx">bucket</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">bucketName</span><span class="p">)</span>
+
+    <span class="nx">service</span><span class="p">.</span><span class="nx">Update</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">tx</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">Tx</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">CreateBucketIfNotExists</span><span class="p">(</span><span class="nx">bucket</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">})</span>
+
+    <span class="nx">db</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Database</span><span class="p">{</span><span class="nx">table</span><span class="p">:</span> <span class="nx">bucket</span><span class="p">,</span> <span class="nx">Service</span><span class="p">:</span> <span class="nx">service</span><span class="p">}</span>
+
+    <span class="nx">runtime</span><span class="p">.</span><span class="nx">SetFinalizer</span><span class="p">(</span><span class="nx">db</span><span class="p">,</span> <span class="nx">closeDB</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">db</span><span class="p">,</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Cleanup</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1">// Cleanup removes any invalid(have expired) session entries,</span>
+<span class="c1">// it&#39;s being called automatically on `New` as well.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="nx">Cleanup</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">err</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">Update</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">tx</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">Tx</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+        <span class="nx">b</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">getBucket</span><span class="p">(</span><span class="nx">tx</span><span class="p">)</span>
+        <span class="nx">c</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">Cursor</span><span class="p">()</span>
+        <span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">First</span><span class="p">();</span> <span class="nx">k</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">;</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="p">=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Next</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span> <span class="c1">// empty key, continue to the next pair</span>
+                <span class="k">continue</span>
+            <span class="p">}</span>
+
+            <span class="nx">storeDB</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">DecodeRemoteStore</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="k">continue</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="nx">storeDB</span><span class="p">.</span><span class="nx">Lifetime</span><span class="p">.</span><span class="nx">HasExpired</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Delete</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                    <span class="nx">golog</span><span class="p">.</span><span class="nx">Warnf</span><span class="p">(</span><span class="s">&quot;troubles when cleanup a session remote store from BoltDB: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="kc">nil</span>
+    <span class="p">})</span>
+
+    <span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="c1">// Async if true passed then it will use different</span>
+<span class="c1">// go routines to update the BoltDB(file-based) storage.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="nx">Async</span><span class="p">(</span><span class="nx">useGoRoutines</span> <span class="kt">bool</span><span class="p">)</span> <span class="o">*</span><span class="nx">Database</span> <span class="p">{</span>
+    <span class="nx">db</span><span class="p">.</span><span class="nx">async</span> <span class="p">=</span> <span class="nx">useGoRoutines</span>
+    <span class="k">return</span> <span class="nx">db</span>
+<span class="p">}</span>
+
+<span class="c1">// Load loads the sessions from the BoltDB(file-based) session storage.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="nx">Load</span><span class="p">(</span><span class="nx">sid</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">storeDB</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">RemoteStore</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">bsid</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">sid</span><span class="p">)</span>
+    <span class="nx">err</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">View</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">tx</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">Tx</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// db.getSessBucket(tx, sid)</span>
+        <span class="nx">b</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">getBucket</span><span class="p">(</span><span class="nx">tx</span><span class="p">)</span>
+        <span class="nx">c</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">Cursor</span><span class="p">()</span>
+        <span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">First</span><span class="p">();</span> <span class="nx">k</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">;</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="p">=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Next</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span> <span class="c1">// empty key, continue to the next pair</span>
+                <span class="k">continue</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">bsid</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// session id should be the name of the key-value pair</span>
+                <span class="nx">storeDB</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">DecodeRemoteStore</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="c1">// decode the whole value, as a remote store</span>
+                <span class="k">break</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span>
+    <span class="p">})</span>
+
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">golog</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;error while trying to load from the remote store: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="c1">// Sync syncs the database with the session&#39;s (memory) store.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="nx">Sync</span><span class="p">(</span><span class="nx">p</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">SyncPayload</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">db</span><span class="p">.</span><span class="nx">async</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="nx">db</span><span class="p">.</span><span class="nx">sync</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">db</span><span class="p">.</span><span class="nx">sync</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="nx">sync</span><span class="p">(</span><span class="nx">p</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">SyncPayload</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">bsid</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">SessionID</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Action</span> <span class="o">==</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">ActionDestroy</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">destroy</span><span class="p">(</span><span class="nx">bsid</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="nx">golog</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;error while destroying a session(%s) from boltdb: %v&quot;</span><span class="p">,</span>
+                <span class="nx">p</span><span class="p">.</span><span class="nx">SessionID</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="nx">s</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Store</span><span class="p">.</span><span class="nx">Serialize</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">golog</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;error while serializing the remote store: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">err</span> <span class="p">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">Update</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">tx</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">Tx</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">db</span><span class="p">.</span><span class="nx">getBucket</span><span class="p">(</span><span class="nx">tx</span><span class="p">).</span><span class="nx">Put</span><span class="p">(</span><span class="nx">bsid</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">golog</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;error while writing the session bucket: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="nx">destroy</span><span class="p">(</span><span class="nx">bsid</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">Update</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">tx</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">Tx</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">db</span><span class="p">.</span><span class="nx">getBucket</span><span class="p">(</span><span class="nx">tx</span><span class="p">).</span><span class="nx">Delete</span><span class="p">(</span><span class="nx">bsid</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="nx">getBucket</span><span class="p">(</span><span class="nx">tx</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">Tx</span><span class="p">)</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">Bucket</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">(</span><span class="nx">db</span><span class="p">.</span><span class="nx">table</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Len reports the number of sessions that are stored to the this BoltDB table.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="nx">Len</span><span class="p">()</span> <span class="p">(</span><span class="nx">num</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">db</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">View</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">tx</span> <span class="o">*</span><span class="nx">bolt</span><span class="p">.</span><span class="nx">Tx</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+        <span class="c1">// Assume bucket exists and has keys</span>
+        <span class="nx">b</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">getBucket</span><span class="p">(</span><span class="nx">tx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">b</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+
+        <span class="nx">b</span><span class="p">.</span><span class="nx">ForEach</span><span class="p">(</span><span class="kd">func</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+            <span class="nx">num</span><span class="o">++</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="kc">nil</span>
+    <span class="p">})</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="c1">// Close shutdowns the BoltDB connection.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="nx">Close</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">closeDB</span><span class="p">(</span><span class="nx">db</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">closeDB</span><span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">Database</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">err</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">golog</span><span class="p">.</span><span class="nx">Warnf</span><span class="p">(</span><span class="s">&quot;closing the BoltDB connection: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Websockets.html" class="btn btn-neutral float-right" title="Websockets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="View.html" class="btn btn-neutral" title="View" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, TristeYen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'10.6.5',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1240 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MVC &mdash; iris-cookbook 10.6.5 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="View" href="View.html" />
+    <link rel="prev" title="错误处理" href="错误处理.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iris-cookbook
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="简介.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="特性.html">特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="版本.html">版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="安装.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="开始使用.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Host.html">Hosts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="配置.html">配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Routing.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="错误处理.html">错误处理</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MVC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#movies-mvc-application">Movies MVC Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mvc-loves-websockets">MVC loves Websockets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mvc-loves-sessions">MVC loves Sessions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-singleton-controller">A Singleton Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="View.html">View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sessions.html">Sessions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Websockets.html">Websockets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iris-cookbook</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>MVC</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/MVC.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mvc">
+<span id="mvc"></span><h1>MVC<a class="headerlink" href="#mvc" title="永久链接至标题">¶</a></h1>
+<p>Iris拥有一流的MVC（模型视图控制器）模式，你不会在Go世界的任何其他地方找到这些东西，</p>
+<p>Iris Web框架以最快的执行速度支持Request数据，模型，持久性数据和绑定。</p>
+<p><strong>特点</strong></p>
+<p>支持所有的HTTP方法，例如，如果是GET请求，那么控制器应该有一个名为<code class="docutils literal notranslate"><span class="pre">Get()</span></code>的函数,
+在同一个控制器里你可以定义多个方法来代表多种请求。</p>
+<p>通过BeforeActivation自定义事件回调，每个控制器，将自定义 controller’s struct’s 方法作为具有自定义路径的处理程序（即使使用正则表达式参数化路径）</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/mvc&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="nx">mvc</span><span class="p">.</span><span class="nx">Configure</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">Party</span><span class="p">(</span><span class="s">&quot;/root&quot;</span><span class="p">),</span> <span class="nx">myMVC</span><span class="p">)</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">myMVC</span><span class="p">(</span><span class="nx">app</span> <span class="o">*</span><span class="nx">mvc</span><span class="p">.</span><span class="nx">Application</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// app.Register(...)</span>
+    <span class="c1">// app.Router.Use/UseGlobal/Done(...)</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Handle</span><span class="p">(</span><span class="nb">new</span><span class="p">(</span><span class="nx">MyController</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">MyController</span> <span class="kd">struct</span> <span class="p">{}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">MyController</span><span class="p">)</span> <span class="nx">BeforeActivation</span><span class="p">(</span><span class="nx">b</span> <span class="nx">mvc</span><span class="p">.</span><span class="nx">BeforeActivation</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// b.Dependencies().Add/Remove</span>
+    <span class="c1">// b.Router().Use/UseGlobal/Done // and any standard API call you already know</span>
+
+    <span class="c1">// 1-&gt; Method</span>
+    <span class="c1">// 2-&gt; Path</span>
+    <span class="c1">// 3-&gt; The controller&#39;s function name to be parsed as handler</span>
+    <span class="c1">// 4-&gt; Any handlers that should run before the MyCustomHandler</span>
+    <span class="nx">b</span><span class="p">.</span><span class="nx">Handle</span><span class="p">(</span><span class="s">&quot;GET&quot;</span><span class="p">,</span> <span class="s">&quot;/something/{id:long}&quot;</span><span class="p">,</span> <span class="s">&quot;MyCustomHandler&quot;</span><span class="p">,</span> <span class="nx">anyMiddleware</span><span class="o">...</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// GET: http://localhost:8080/root</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">MyController</span><span class="p">)</span> <span class="nx">Get</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;Hey&quot;</span> <span class="p">}</span>
+
+<span class="c1">// GET: http://localhost:8080/root/something/{id:long}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">MyController</span><span class="p">)</span> <span class="nx">MyCustomHandler</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;MyCustomHandler says Hey&quot;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>通过定义服务的依赖关系在你的 controller struc 内部持久化数据（请求之间共享数据）或者<code class="docutils literal notranslate"><span class="pre">Singleton</span></code>控制范围。</p>
+<p>共享控制器之间的依赖关系或在父MVC应用程序上注册它们，并能够在Controller内的 <code class="docutils literal notranslate"><span class="pre">BeforeActivation</span></code> 可选事件回调中修改每个控制器的依赖关系，</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span><span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">MyController</span><span class="p">)</span> <span class="nx">BeforeActivation</span><span class="p">(</span><span class="nx">b</span> <span class="nx">mvc</span><span class="p">.</span><span class="nx">BeforeActivation</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">b</span><span class="p">.</span><span class="nx">Dependencies</span><span class="p">().</span><span class="nx">Add</span><span class="o">/</span><span class="nx">Remove</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>作为控制器的字段访问 <code class="docutils literal notranslate"><span class="pre">Context</span></code> i.e <code class="docutils literal notranslate"><span class="pre">Ctx</span> <span class="pre">iris.Context</span></code>或通过方法传参，i.e <code class="docutils literal notranslate"><span class="pre">func(ctx</span> <span class="pre">iris.Context,</span> <span class="pre">otherArguments...)</span></code></p>
+<p>Controller struct 中的 Models（在方法中设置并有视图呈现），在同一请求生命周期中，您可以在控制器的方法中返回 models，
+在请求生命周期中设置一个字段，并将该字段返回给另一个方法。</p>
+<p>MVC有自己的<code class="docutils literal notranslate"><span class="pre">Router</span></code>，它是 <code class="docutils literal notranslate"><span class="pre">iris/router.Party</span></code> 类型，标准的 iris api，<code class="docutils literal notranslate"><span class="pre">Controllers</span></code>可以被注册到任何 <code class="docutils literal notranslate"><span class="pre">Party</span></code>,
+包括子域名，Party’s 按预期的开始和完成 handlers 工作着。</p>
+<p>可选项 <code class="docutils literal notranslate"><span class="pre">BeginRequest(ctx)</span></code> 在方法执行之前上演初始化操作，用于调用中间件或许多方法使用相同的数据集合。</p>
+<p>可选项 <code class="docutils literal notranslate"><span class="pre">EndRequest(ctx)</span></code> 在执行方法之后执行终止操作。</p>
+<p>继承，递归<code class="docutils literal notranslate"><span class="pre">mvc.SessionController</span></code>，<code class="docutils literal notranslate"><span class="pre">Session</span></code>、<code class="docutils literal notranslate"><span class="pre">*sessions.Session</span></code>和<code class="docutils literal notranslate"><span class="pre">Manager</span> <span class="pre">*sessions.Sessions</span></code>作为其 <code class="docutils literal notranslate"><span class="pre">BeginRequest</span></code>填充的嵌入字段。
+这只是个栗子，你可以使用通过管理器的<code class="docutils literal notranslate"><span class="pre">Start</span></code>返回的<code class="docutils literal notranslate"><span class="pre">sessions.Session</span></code>作为MVC应用程序的动态依赖。</p>
+<p><code class="docutils literal notranslate"><span class="pre">mvcApp.Register(sessions.New(sessions.Config{Cookie:</span> <span class="pre">&quot;iris_session_id&quot;}).Start)</span></code></p>
+<p>通过控制器方法的输入参数访问动态路径参数，不需要绑定，当您使用Iris的默认语法来解析来自控制器的处理程序时，您需要使用<code class="docutils literal notranslate"><span class="pre">By</span></code>来为方法添加后缀,
+区分大小写。</p>
+<p><code class="docutils literal notranslate"><span class="pre">mvc.New(app.Party(&quot;/user&quot;)).Handle(new(user.Controller))</span></code></p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">Get()</span> <span class="pre">-</span> <span class="pre">GET:/user</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">Post()</span> <span class="pre">-</span> <span class="pre">POST:/user</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">GetLogin()</span> <span class="pre">-</span> <span class="pre">GET:/user/login</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">PostLogin()</span> <span class="pre">-</span> <span class="pre">POST:/user/login</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">GetProfileFollowers()</span> <span class="pre">-</span> <span class="pre">GET:/user/profile/followers</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">PostProfileFollowers()</span> <span class="pre">-</span> <span class="pre">POST:/user/profile/followers</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">GetBy(id</span> <span class="pre">int64)</span> <span class="pre">-</span> <span class="pre">GET:/user/{param:long}</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">PostBy(id</span> <span class="pre">int64)</span> <span class="pre">-</span> <span class="pre">POST:/user/{param:long}</span></code></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">mvc.New(app.Party(&quot;/profile&quot;)).Handle(new(profile.Controller))</span></code></p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">GetBy(username</span> <span class="pre">string)</span> <span class="pre">-</span> <span class="pre">GET:/profile/{param:string}</span></code></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">mvc.New(app.Party(&quot;/assets&quot;)).Handle(new(file.Controller))</span></code></p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">func(*Controller)</span> <span class="pre">GetByWildard(path</span> <span class="pre">string)</span> <span class="pre">-</span> <span class="pre">GET:/assets/{param:path}</span></code></li>
+</ul>
+<p>接收器支持的类型 <code class="docutils literal notranslate"><span class="pre">int</span></code>、<code class="docutils literal notranslate"><span class="pre">int64</span></code>、<code class="docutils literal notranslate"><span class="pre">bool</span></code>、<code class="docutils literal notranslate"><span class="pre">string</span></code></p>
+<p>通过输出参数响应，可选 i.e</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span><span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">ExampleController</span><span class="p">)</span> <span class="nx">Get</span><span class="p">()</span> <span class="kt">string</span> <span class="p">|</span>
+                                <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="p">|</span>
+                                <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">|</span>
+                                <span class="kt">int</span> <span class="p">|</span>
+                                <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="p">|</span>
+                                <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">|</span>
+                                <span class="kt">error</span> <span class="p">|</span>
+                                <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">|</span>
+                                <span class="p">(</span><span class="nx">any</span><span class="p">,</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">|</span>
+                                <span class="p">(</span><span class="nx">customStruct</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">|</span>
+                                <span class="nx">customStruct</span> <span class="p">|</span>
+                                <span class="p">(</span><span class="nx">customStruct</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">|</span>
+                                <span class="p">(</span><span class="nx">customStruct</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="p">|</span>
+                                <span class="nx">mvc</span><span class="p">.</span><span class="nx">Result</span> <span class="nx">or</span> <span class="p">(</span><span class="nx">mvc</span><span class="p">.</span><span class="nx">Result</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>其中<code class="docutils literal notranslate"><span class="pre">mvc.Result</span></code>是一个只包含该函数的接口：<code class="docutils literal notranslate"><span class="pre">Dispatch(ctx</span> <span class="pre">iris.Context)</span></code></p>
+<p><strong>使用Iris MVC进行代码重用</strong></p>
+<p>通过创建彼此独立的组件，开发人员能够在其他应用程序中快速轻松地重用组件，
+对于具有不同数据的另一个应用程序，可以为一个应用程序重构相同（或类似）的视图，因为视图只是处理数据如何显示给用户。</p>
+<p>如果您不熟悉后端Web开发，请首先阅读有关MVC架构模式的内容，一个好的开始就是维基百科文章。</p>
+<p><strong>快速MVC教程第1部分</strong></p>
+<p>这个栗子和  https://github.com/kataras/iris/blob/master/_examples/hello-world/main.go 一样。</p>
+<p>似乎你必须编写额外的代码是不值得的，但请记住，这个例子没有使用像模型这样的iris mvc功能，
+持久性或View引擎？也不是Session，这对于学习来说非常简单，可能你永远不会在你的应用程序中的任何地方使用简单的控制器。</p>
+<p>在我的个人笔记本电脑上，在每个20MB吞吐量的“/hello”路径上使用MVC的这个例子JSON花费了大约2MB，
+它适用于大多数应用，但你可以选择最适合你的Iris，低级处理程序：在大型应用程序上更小的代码库更易于维护。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/mvc&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris/middleware/logger&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/middleware/recover&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="c1">// Optionally, add two built&#39;n handlers</span>
+    <span class="c1">// that can recover from any http-relative panics</span>
+    <span class="c1">// and log the requests to the terminal.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Use</span><span class="p">(</span><span class="nx">recover</span><span class="p">.</span><span class="nx">New</span><span class="p">())</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Use</span><span class="p">(</span><span class="nx">logger</span><span class="p">.</span><span class="nx">New</span><span class="p">())</span>
+
+    <span class="c1">// Serve a controller based on the root Router, &quot;/&quot;.</span>
+    <span class="nx">mvc</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">Handle</span><span class="p">(</span><span class="nb">new</span><span class="p">(</span><span class="nx">ExampleController</span><span class="p">))</span>
+
+    <span class="c1">// http://localhost:8080</span>
+    <span class="c1">// http://localhost:8080/ping</span>
+    <span class="c1">// http://localhost:8080/hello</span>
+    <span class="c1">// http://localhost:8080/custom_path</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="c1">// ExampleController serves the &quot;/&quot;, &quot;/ping&quot; and &quot;/hello&quot;.</span>
+<span class="kd">type</span> <span class="nx">ExampleController</span> <span class="kd">struct</span><span class="p">{}</span>
+
+<span class="c1">// Get serves</span>
+<span class="c1">// Method:   GET</span>
+<span class="c1">// Resource: http://localhost:8080</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">ExampleController</span><span class="p">)</span> <span class="nx">Get</span><span class="p">()</span> <span class="nx">mvc</span><span class="p">.</span><span class="nx">Result</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">mvc</span><span class="p">.</span><span class="nx">Response</span><span class="p">{</span>
+        <span class="nx">ContentType</span><span class="p">:</span> <span class="s">&quot;text/html&quot;</span><span class="p">,</span>
+        <span class="nx">Text</span><span class="p">:</span>        <span class="s">&quot;&lt;h1&gt;Welcome&lt;/h1&gt;&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// GetPing serves</span>
+<span class="c1">// Method:   GET</span>
+<span class="c1">// Resource: http://localhost:8080/ping</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">ExampleController</span><span class="p">)</span> <span class="nx">GetPing</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">&quot;pong&quot;</span>
+<span class="p">}</span>
+
+<span class="c1">// GetHello serves</span>
+<span class="c1">// Method:   GET</span>
+<span class="c1">// Resource: http://localhost:8080/hello</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">ExampleController</span><span class="p">)</span> <span class="nx">GetHello</span><span class="p">()</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;message&quot;</span><span class="p">:</span> <span class="s">&quot;Hello Iris!&quot;</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// BeforeActivation called once, before the controller adapted to the main application</span>
+<span class="c1">// and of course before the server ran.</span>
+<span class="c1">// After version 9 you can also add custom routes for a specific controller&#39;s methods.</span>
+<span class="c1">// Here you can register custom method&#39;s handlers</span>
+<span class="c1">// use the standard router with `ca.Router` to do something that you can do without mvc as well,</span>
+<span class="c1">// and add dependencies that will be binded to a controller&#39;s fields or method function&#39;s input arguments.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">ExampleController</span><span class="p">)</span> <span class="nx">BeforeActivation</span><span class="p">(</span><span class="nx">b</span> <span class="nx">mvc</span><span class="p">.</span><span class="nx">BeforeActivation</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">anyMiddlewareHere</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Application</span><span class="p">().</span><span class="nx">Logger</span><span class="p">().</span><span class="nx">Warnf</span><span class="p">(</span><span class="s">&quot;Inside /custom_path&quot;</span><span class="p">)</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Next</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="nx">b</span><span class="p">.</span><span class="nx">Handle</span><span class="p">(</span><span class="s">&quot;GET&quot;</span><span class="p">,</span> <span class="s">&quot;/custom_path&quot;</span><span class="p">,</span> <span class="s">&quot;CustomHandlerWithoutFollowingTheNamingGuide&quot;</span><span class="p">,</span> <span class="nx">anyMiddlewareHere</span><span class="p">)</span>
+
+    <span class="c1">// or even add a global middleware based on this controller&#39;s router,</span>
+    <span class="c1">// which in this example is the root &quot;/&quot;:</span>
+    <span class="c1">// b.Router().Use(myMiddleware)</span>
+<span class="p">}</span>
+
+<span class="c1">// CustomHandlerWithoutFollowingTheNamingGuide serves</span>
+<span class="c1">// Method:   GET</span>
+<span class="c1">// Resource: http://localhost:8080/custom_path</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">ExampleController</span><span class="p">)</span> <span class="nx">CustomHandlerWithoutFollowingTheNamingGuide</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">&quot;hello from the custom handler without following the naming guide&quot;</span>
+<span class="p">}</span>
+
+<span class="c1">// GetUserBy serves</span>
+<span class="c1">// Method:   GET</span>
+<span class="c1">// Resource: http://localhost:8080/user/{username:string}</span>
+<span class="c1">// By is a reserved &quot;keyword&quot; to tell the framework that you&#39;re going to</span>
+<span class="c1">// bind path parameters in the function&#39;s input arguments, and it also</span>
+<span class="c1">// helps to have &quot;Get&quot; and &quot;GetBy&quot; in the same controller.</span>
+<span class="c1">//</span>
+<span class="c1">// func (c *ExampleController) GetUserBy(username string) mvc.Result {</span>
+<span class="c1">//     return mvc.View{</span>
+<span class="c1">//         Name: &quot;user/username.html&quot;,</span>
+<span class="c1">//         Data: username,</span>
+<span class="c1">//     }</span>
+<span class="c1">// }</span>
+
+<span class="cm">/* Can use more than one, the factory will make sure</span>
+<span class="cm">that the correct http methods are being registered for each route</span>
+<span class="cm">for this controller, uncomment these if you want:</span>
+
+<span class="cm">func (c *ExampleController) Post() {}</span>
+<span class="cm">func (c *ExampleController) Put() {}</span>
+<span class="cm">func (c *ExampleController) Delete() {}</span>
+<span class="cm">func (c *ExampleController) Connect() {}</span>
+<span class="cm">func (c *ExampleController) Head() {}</span>
+<span class="cm">func (c *ExampleController) Patch() {}</span>
+<span class="cm">func (c *ExampleController) Options() {}</span>
+<span class="cm">func (c *ExampleController) Trace() {}</span>
+<span class="cm">*/</span>
+
+<span class="cm">/*</span>
+<span class="cm">func (c *ExampleController) All() {}</span>
+<span class="cm">//        OR</span>
+<span class="cm">func (c *ExampleController) Any() {}</span>
+
+
+
+<span class="cm">func (c *ExampleController) BeforeActivation(b mvc.BeforeActivation) {</span>
+<span class="cm">    // 1 -&gt; the HTTP Method</span>
+<span class="cm">    // 2 -&gt; the route&#39;s path</span>
+<span class="cm">    // 3 -&gt; this controller&#39;s method name that should be handler for that route.</span>
+<span class="cm">    b.Handle(&quot;GET&quot;, &quot;/mypath/{param}&quot;, &quot;DoIt&quot;, optionalMiddlewareHere...)</span>
+<span class="cm">}</span>
+
+<span class="cm">// After activation, all dependencies are set-ed - so read only access on them</span>
+<span class="cm">// but still possible to add custom controller or simple standard handlers.</span>
+<span class="cm">func (c *ExampleController) AfterActivation(a mvc.AfterActivation) {}</span>
+
+<span class="cm">*/</span>
+</pre></div>
+</div>
+<div class="section" id="movies-mvc-application">
+<span id="movies-mvc-application"></span><h2>Movies MVC Application<a class="headerlink" href="#movies-mvc-application" title="永久链接至标题">¶</a></h2>
+<p>Iris有一个非常强大和极快的MVC支持，你可以从方法函数返回任何类型的任何值，它将按预期发送到客户端。</p>
+<ul class="simple">
+<li>如果为<code class="docutils literal notranslate"><span class="pre">string</span></code> 它将是body</li>
+<li>如果<code class="docutils literal notranslate"><span class="pre">string</span></code>是第二个输出参数，那么它就是content type</li>
+<li>如果是<code class="docutils literal notranslate"><span class="pre">int</span></code>那么它是状态代码</li>
+<li>如果<code class="docutils literal notranslate"><span class="pre">error</span></code>而不是<code class="docutils literal notranslate"><span class="pre">nil</span></code>那么（任何类型）响应将被省略，并且将呈现带有400错误请求的错误文本。</li>
+<li>如果是<code class="docutils literal notranslate"><span class="pre">(int,</span> <span class="pre">error)</span></code>和<code class="docutils literal notranslate"><span class="pre">error</span></code>不是<code class="docutils literal notranslate"><span class="pre">nil</span></code>，那么响应结果将是错误的文本，状态代码为<code class="docutils literal notranslate"><span class="pre">int</span></code></li>
+<li>如果是<code class="docutils literal notranslate"><span class="pre">custom</span> <span class="pre">struct</span></code>或<code class="docutils literal notranslate"><span class="pre">interface{}</span></code>或<code class="docutils literal notranslate"><span class="pre">slice</span></code>或<code class="docutils literal notranslate"><span class="pre">map</span></code>，那么它将呈现为json，除非跟随字符串内容类型。</li>
+<li>如果<code class="docutils literal notranslate"><span class="pre">mvc.Result</span></code>然后它执行其<code class="docutils literal notranslate"><span class="pre">Dispatch</span></code>函数，那么可以使用好的设计模式在需要的地方拆分模型的逻辑。</li>
+</ul>
+<p>没有什么能阻止您使用自己喜欢的文件夹结构。 Iris是一个低级Web框架，它有MVC一流的支持，但它不限制你的文件夹结构，这是你的选择。</p>
+<p>结构取决于您自己的需求。我们无法告诉您如何设计自己的应用程序，但您可以自由地仔细查看下面的一个用例示例</p>
+<p><strong>数据模型层</strong></p>
+<p>让我们从<code class="docutils literal notranslate"><span class="pre">Movie</span></code>模型开始</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file: datamodels/movie.go</span>
+
+<span class="kn">package</span> <span class="nx">datamodels</span>
+
+<span class="c1">// Movie is our sample data structure.</span>
+<span class="c1">// Keep note that the tags for public-use (for our web app)</span>
+<span class="c1">// should be kept in other file like &quot;web/viewmodels/movie.go&quot;</span>
+<span class="c1">// which could wrap by embedding the datamodels.Movie or</span>
+<span class="c1">// declare new fields instead butwe will use this datamodel</span>
+<span class="c1">// as the only one Movie model in our application,</span>
+<span class="c1">// for the shake of simplicty.</span>
+<span class="kd">type</span> <span class="nx">Movie</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">ID</span>     <span class="kt">int64</span>  <span class="s">`json:&quot;id&quot;`</span>
+    <span class="nx">Name</span>   <span class="kt">string</span> <span class="s">`json:&quot;name&quot;`</span>
+    <span class="nx">Year</span>   <span class="kt">int</span>    <span class="s">`json:&quot;year&quot;`</span>
+    <span class="nx">Genre</span>  <span class="kt">string</span> <span class="s">`json:&quot;genre&quot;`</span>
+    <span class="nx">Poster</span> <span class="kt">string</span> <span class="s">`json:&quot;poster&quot;`</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>数据源/数据存储层</strong></p>
+<p>之后，我们继续为我们的<code class="docutils literal notranslate"><span class="pre">Movies</span></code>创建一个简单的内存存储</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file: datasource/movies.go</span>
+
+<span class="kn">package</span> <span class="nx">datasource</span>
+
+<span class="kn">import</span> <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/datamodels&quot;</span>
+
+<span class="c1">// Movies is our imaginary data source.</span>
+<span class="kd">var</span> <span class="nx">Movies</span> <span class="p">=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int64</span><span class="p">]</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">ID</span><span class="p">:</span>     <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">Name</span><span class="p">:</span>   <span class="s">&quot;Casablanca&quot;</span><span class="p">,</span>
+        <span class="nx">Year</span><span class="p">:</span>   <span class="mi">1942</span><span class="p">,</span>
+        <span class="nx">Genre</span><span class="p">:</span>  <span class="s">&quot;Romance&quot;</span><span class="p">,</span>
+        <span class="nx">Poster</span><span class="p">:</span> <span class="s">&quot;https://iris-go.com/images/examples/mvc-movies/1.jpg&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">ID</span><span class="p">:</span>     <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">Name</span><span class="p">:</span>   <span class="s">&quot;Gone with the Wind&quot;</span><span class="p">,</span>
+        <span class="nx">Year</span><span class="p">:</span>   <span class="mi">1939</span><span class="p">,</span>
+        <span class="nx">Genre</span><span class="p">:</span>  <span class="s">&quot;Romance&quot;</span><span class="p">,</span>
+        <span class="nx">Poster</span><span class="p">:</span> <span class="s">&quot;https://iris-go.com/images/examples/mvc-movies/2.jpg&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">ID</span><span class="p">:</span>     <span class="mi">3</span><span class="p">,</span>
+        <span class="nx">Name</span><span class="p">:</span>   <span class="s">&quot;Citizen Kane&quot;</span><span class="p">,</span>
+        <span class="nx">Year</span><span class="p">:</span>   <span class="mi">1941</span><span class="p">,</span>
+        <span class="nx">Genre</span><span class="p">:</span>  <span class="s">&quot;Mystery&quot;</span><span class="p">,</span>
+        <span class="nx">Poster</span><span class="p">:</span> <span class="s">&quot;https://iris-go.com/images/examples/mvc-movies/3.jpg&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">ID</span><span class="p">:</span>     <span class="mi">4</span><span class="p">,</span>
+        <span class="nx">Name</span><span class="p">:</span>   <span class="s">&quot;The Wizard of Oz&quot;</span><span class="p">,</span>
+        <span class="nx">Year</span><span class="p">:</span>   <span class="mi">1939</span><span class="p">,</span>
+        <span class="nx">Genre</span><span class="p">:</span>  <span class="s">&quot;Fantasy&quot;</span><span class="p">,</span>
+        <span class="nx">Poster</span><span class="p">:</span> <span class="s">&quot;https://iris-go.com/images/examples/mvc-movies/4.jpg&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="mi">5</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">ID</span><span class="p">:</span>     <span class="mi">5</span><span class="p">,</span>
+        <span class="nx">Name</span><span class="p">:</span>   <span class="s">&quot;North by Northwest&quot;</span><span class="p">,</span>
+        <span class="nx">Year</span><span class="p">:</span>   <span class="mi">1959</span><span class="p">,</span>
+        <span class="nx">Genre</span><span class="p">:</span>  <span class="s">&quot;Thriller&quot;</span><span class="p">,</span>
+        <span class="nx">Poster</span><span class="p">:</span> <span class="s">&quot;https://iris-go.com/images/examples/mvc-movies/5.jpg&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Repositories</strong></p>
+<p>可以直接访问“数据源”并可以直接操作数据的层。</p>
+<p>可选（因为你可以在<code class="docutils literal notranslate"><span class="pre">Service</span></code>中也有），但是对于那个例子，我们需要创建一个<code class="docutils literal notranslate"><span class="pre">Repository</span></code>，一个存储库处理“低级”，直接访问<code class="docutils literal notranslate"><span class="pre">Movies</span></code>数据源。
+保留”a Repository”,它是一个<code class="docutils literal notranslate"><span class="pre">interface</span></code>，因为它可以有所不同，这取决于您的应用程序开发的状态。
+列如在生产中将使用一些真正的SQL查询或您用于查询数据的任何其他内容。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file: repositories/movie_repository.go</span>
+
+<span class="kn">package</span> <span class="nx">repositories</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;errors&quot;</span>
+    <span class="s">&quot;sync&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/datamodels&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// Query represents the visitor and action queries.</span>
+<span class="kd">type</span> <span class="nx">Query</span> <span class="kd">func</span><span class="p">(</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="kt">bool</span>
+
+<span class="c1">// MovieRepository handles the basic operations of a movie entity/model.</span>
+<span class="c1">// It&#39;s an interface in order to be testable, i.e a memory movie repository or</span>
+<span class="c1">// a connected to an sql database.</span>
+<span class="kd">type</span> <span class="nx">MovieRepository</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nx">Exec</span><span class="p">(</span><span class="nx">query</span> <span class="nx">Query</span><span class="p">,</span> <span class="nx">action</span> <span class="nx">Query</span><span class="p">,</span> <span class="nx">limit</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">mode</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">ok</span> <span class="kt">bool</span><span class="p">)</span>
+
+    <span class="nx">Select</span><span class="p">(</span><span class="nx">query</span> <span class="nx">Query</span><span class="p">)</span> <span class="p">(</span><span class="nx">movie</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="nx">found</span> <span class="kt">bool</span><span class="p">)</span>
+    <span class="nx">SelectMany</span><span class="p">(</span><span class="nx">query</span> <span class="nx">Query</span><span class="p">,</span> <span class="nx">limit</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">results</span> <span class="p">[]</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span>
+
+    <span class="nx">InsertOrUpdate</span><span class="p">(</span><span class="nx">movie</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="p">(</span><span class="nx">updatedMovie</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="nx">Delete</span><span class="p">(</span><span class="nx">query</span> <span class="nx">Query</span><span class="p">,</span> <span class="nx">limit</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">deleted</span> <span class="kt">bool</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// NewMovieRepository returns a new movie memory-based repository,</span>
+<span class="c1">// the one and only repository type in our example.</span>
+<span class="kd">func</span> <span class="nx">NewMovieRepository</span><span class="p">(</span><span class="nx">source</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int64</span><span class="p">]</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="nx">MovieRepository</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">movieMemoryRepository</span><span class="p">{</span><span class="nx">source</span><span class="p">:</span> <span class="nx">source</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// movieMemoryRepository is a &quot;MovieRepository&quot;</span>
+<span class="c1">// which manages the movies using the memory data source (map).</span>
+<span class="kd">type</span> <span class="nx">movieMemoryRepository</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">source</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int64</span><span class="p">]</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span>
+    <span class="nx">mu</span>     <span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="p">(</span>
+    <span class="c1">// ReadOnlyMode will RLock(read) the data .</span>
+    <span class="nx">ReadOnlyMode</span> <span class="p">=</span> <span class="kc">iota</span>
+    <span class="c1">// ReadWriteMode will Lock(read/write) the data.</span>
+    <span class="nx">ReadWriteMode</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">movieMemoryRepository</span><span class="p">)</span> <span class="nx">Exec</span><span class="p">(</span><span class="nx">query</span> <span class="nx">Query</span><span class="p">,</span> <span class="nx">action</span> <span class="nx">Query</span><span class="p">,</span> <span class="nx">actionLimit</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">mode</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">ok</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">loops</span> <span class="o">:=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="nx">mode</span> <span class="o">==</span> <span class="nx">ReadOnlyMode</span> <span class="p">{</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">RLock</span><span class="p">()</span>
+        <span class="k">defer</span> <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">RUnlock</span><span class="p">()</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span>
+        <span class="k">defer</span> <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">movie</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">r</span><span class="p">.</span><span class="nx">source</span> <span class="p">{</span>
+        <span class="nx">ok</span> <span class="p">=</span> <span class="nx">query</span><span class="p">(</span><span class="nx">movie</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">ok</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">action</span><span class="p">(</span><span class="nx">movie</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">loops</span><span class="o">++</span>
+                <span class="k">if</span> <span class="nx">actionLimit</span> <span class="o">&gt;=</span> <span class="nx">loops</span> <span class="p">{</span>
+                    <span class="k">break</span> <span class="c1">// break</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="c1">// Select receives a query function</span>
+<span class="c1">// which is fired for every single movie model inside</span>
+<span class="c1">// our imaginary data source.</span>
+<span class="c1">// When that function returns true then it stops the iteration.</span>
+<span class="c1">//</span>
+<span class="c1">// It returns the query&#39;s return last known &quot;found&quot; value</span>
+<span class="c1">// and the last known movie model</span>
+<span class="c1">// to help callers to reduce the LOC.</span>
+<span class="c1">//</span>
+<span class="c1">// It&#39;s actually a simple but very clever prototype function</span>
+<span class="c1">// I&#39;m using everywhere since I firstly think of it,</span>
+<span class="c1">// hope you&#39;ll find it very useful as well.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">movieMemoryRepository</span><span class="p">)</span> <span class="nx">Select</span><span class="p">(</span><span class="nx">query</span> <span class="nx">Query</span><span class="p">)</span> <span class="p">(</span><span class="nx">movie</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="nx">found</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">found</span> <span class="p">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Exec</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">m</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="nx">movie</span> <span class="p">=</span> <span class="nx">m</span>
+        <span class="k">return</span> <span class="kc">true</span>
+    <span class="p">},</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">ReadOnlyMode</span><span class="p">)</span>
+
+    <span class="c1">// set an empty datamodels.Movie if not found at all.</span>
+    <span class="k">if</span> <span class="p">!</span><span class="nx">found</span> <span class="p">{</span>
+        <span class="nx">movie</span> <span class="p">=</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">{}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="c1">// SelectMany same as Select but returns one or more datamodels.Movie as a slice.</span>
+<span class="c1">// If limit &lt;=0 then it returns everything.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">movieMemoryRepository</span><span class="p">)</span> <span class="nx">SelectMany</span><span class="p">(</span><span class="nx">query</span> <span class="nx">Query</span><span class="p">,</span> <span class="nx">limit</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">results</span> <span class="p">[]</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">Exec</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">m</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="nx">results</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">results</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">true</span>
+    <span class="p">},</span> <span class="nx">limit</span><span class="p">,</span> <span class="nx">ReadOnlyMode</span><span class="p">)</span>
+
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="c1">// InsertOrUpdate adds or updates a movie to the (memory) storage.</span>
+<span class="c1">//</span>
+<span class="c1">// Returns the new movie and an error if any.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">movieMemoryRepository</span><span class="p">)</span> <span class="nx">InsertOrUpdate</span><span class="p">(</span><span class="nx">movie</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="p">(</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">id</span> <span class="o">:=</span> <span class="nx">movie</span><span class="p">.</span><span class="nx">ID</span>
+
+    <span class="k">if</span> <span class="nx">id</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span> <span class="c1">// Create new action</span>
+        <span class="kd">var</span> <span class="nx">lastID</span> <span class="kt">int64</span>
+        <span class="c1">// find the biggest ID in order to not have duplications</span>
+        <span class="c1">// in productions apps you can use a third-party</span>
+        <span class="c1">// library to generate a UUID as string.</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">RLock</span><span class="p">()</span>
+        <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">item</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">r</span><span class="p">.</span><span class="nx">source</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">item</span><span class="p">.</span><span class="nx">ID</span> <span class="p">&gt;</span> <span class="nx">lastID</span> <span class="p">{</span>
+                <span class="nx">lastID</span> <span class="p">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">ID</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">RUnlock</span><span class="p">()</span>
+
+        <span class="nx">id</span> <span class="p">=</span> <span class="nx">lastID</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="nx">movie</span><span class="p">.</span><span class="nx">ID</span> <span class="p">=</span> <span class="nx">id</span>
+
+        <span class="c1">// map-specific thing</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">source</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="p">=</span> <span class="nx">movie</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="nx">movie</span><span class="p">,</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Update action based on the movie.ID,</span>
+    <span class="c1">// here we will allow updating the poster and genre if not empty.</span>
+    <span class="c1">// Alternatively we could do pure replace instead:</span>
+    <span class="c1">// r.source[id] = movie</span>
+    <span class="c1">// and comment the code below;</span>
+    <span class="nx">current</span><span class="p">,</span> <span class="nx">exists</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Select</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">m</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">m</span><span class="p">.</span><span class="nx">ID</span> <span class="o">==</span> <span class="nx">id</span>
+    <span class="p">})</span>
+
+    <span class="k">if</span> <span class="p">!</span><span class="nx">exists</span> <span class="p">{</span> <span class="c1">// ID is not a real one, return an error.</span>
+        <span class="k">return</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">{},</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="s">&quot;failed to update a nonexistent movie&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// or comment these and r.source[id] = m for pure replace</span>
+    <span class="k">if</span> <span class="nx">movie</span><span class="p">.</span><span class="nx">Poster</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span> <span class="p">{</span>
+        <span class="nx">current</span><span class="p">.</span><span class="nx">Poster</span> <span class="p">=</span> <span class="nx">movie</span><span class="p">.</span><span class="nx">Poster</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nx">movie</span><span class="p">.</span><span class="nx">Genre</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span> <span class="p">{</span>
+        <span class="nx">current</span><span class="p">.</span><span class="nx">Genre</span> <span class="p">=</span> <span class="nx">movie</span><span class="p">.</span><span class="nx">Genre</span>
+    <span class="p">}</span>
+
+    <span class="c1">// map-specific thing</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">Lock</span><span class="p">()</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">source</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="p">=</span> <span class="nx">current</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nx">Unlock</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="nx">movie</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">movieMemoryRepository</span><span class="p">)</span> <span class="nx">Delete</span><span class="p">(</span><span class="nx">query</span> <span class="nx">Query</span><span class="p">,</span> <span class="nx">limit</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Exec</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">m</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="nb">delete</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">source</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nx">ID</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">true</span>
+    <span class="p">},</span> <span class="nx">limit</span><span class="p">,</span> <span class="nx">ReadWriteMode</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Services</strong></p>
+<p>可以访问“repositories”和“models”（甚至是“datamodels”，如果是简单应用程序）的函数的层。它应该包含大部分域逻辑。</p>
+<p>我们需要一个服务来与我们的存储库在“high-level”和store/retrieve <code class="docutils literal notranslate"><span class="pre">Movies</span></code>中进行通信，这将在下面的Web控制器上使用。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file: services/movie_service.go</span>
+
+<span class="kn">package</span> <span class="nx">services</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/datamodels&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/repositories&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// MovieService handles some of the CRUID operations of the movie datamodel.</span>
+<span class="c1">// It depends on a movie repository for its actions.</span>
+<span class="c1">// It&#39;s here to decouple the data source from the higher level compoments.</span>
+<span class="c1">// As a result a different repository type can be used with the same logic without any aditional changes.</span>
+<span class="c1">// It&#39;s an interface and it&#39;s used as interface everywhere</span>
+<span class="c1">// because we may need to change or try an experimental different domain logic at the future.</span>
+<span class="kd">type</span> <span class="nx">MovieService</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nx">GetAll</span><span class="p">()</span> <span class="p">[]</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span>
+    <span class="nx">GetByID</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="kt">bool</span><span class="p">)</span>
+    <span class="nx">DeleteByID</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="kt">bool</span>
+    <span class="nx">UpdatePosterAndGenreByID</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">,</span> <span class="nx">poster</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">genre</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// NewMovieService returns the default movie service.</span>
+<span class="kd">func</span> <span class="nx">NewMovieService</span><span class="p">(</span><span class="nx">repo</span> <span class="nx">repositories</span><span class="p">.</span><span class="nx">MovieRepository</span><span class="p">)</span> <span class="nx">MovieService</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">movieService</span><span class="p">{</span>
+        <span class="nx">repo</span><span class="p">:</span> <span class="nx">repo</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">movieService</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">repo</span> <span class="nx">repositories</span><span class="p">.</span><span class="nx">MovieRepository</span>
+<span class="p">}</span>
+
+<span class="c1">// GetAll returns all movies.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">movieService</span><span class="p">)</span> <span class="nx">GetAll</span><span class="p">()</span> <span class="p">[]</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nx">repo</span><span class="p">.</span><span class="nx">SelectMany</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">true</span>
+    <span class="p">},</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// GetByID returns a movie based on its id.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">movieService</span><span class="p">)</span> <span class="nx">GetByID</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nx">repo</span><span class="p">.</span><span class="nx">Select</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">m</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">m</span><span class="p">.</span><span class="nx">ID</span> <span class="o">==</span> <span class="nx">id</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1">// UpdatePosterAndGenreByID updates a movie&#39;s poster and genre.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">movieService</span><span class="p">)</span> <span class="nx">UpdatePosterAndGenreByID</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">,</span> <span class="nx">poster</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">genre</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// update the movie and return it.</span>
+    <span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nx">repo</span><span class="p">.</span><span class="nx">InsertOrUpdate</span><span class="p">(</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">{</span>
+        <span class="nx">ID</span><span class="p">:</span>     <span class="nx">id</span><span class="p">,</span>
+        <span class="nx">Poster</span><span class="p">:</span> <span class="nx">poster</span><span class="p">,</span>
+        <span class="nx">Genre</span><span class="p">:</span>  <span class="nx">genre</span><span class="p">,</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1">// DeleteByID deletes a movie by its id.</span>
+<span class="c1">//</span>
+<span class="c1">// Returns true if deleted otherwise false.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">movieService</span><span class="p">)</span> <span class="nx">DeleteByID</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nx">repo</span><span class="p">.</span><span class="nx">Delete</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">m</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">m</span><span class="p">.</span><span class="nx">ID</span> <span class="o">==</span> <span class="nx">id</span>
+    <span class="p">},</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>View Models</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/datamodels&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris/context&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">Movie</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="nx">Movie</span><span class="p">)</span> <span class="nx">IsValid</span><span class="p">()</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="cm">/* do some checks and return true if it&#39;s valid... */</span>
+    <span class="k">return</span> <span class="nx">m</span><span class="p">.</span><span class="nx">ID</span> <span class="p">&gt;</span> <span class="mi">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Iris能够将任何自定义数据结构转换为HTTP Response,因此从理论上讲，如果确实需要，则允许使用以下内容：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Dispatch completes the `kataras/iris/mvc#Result` interface.</span>
+<span class="c1">// Sends a `Movie` as a controlled http response.</span>
+<span class="c1">// If its ID is zero or less then it returns a 404 not found error</span>
+<span class="c1">// else it returns its json representation,</span>
+<span class="c1">// (just like the controller&#39;s functions do for custom types by default).</span>
+<span class="c1">//</span>
+<span class="c1">// Don&#39;t overdo it, the application&#39;s logic should not be here.</span>
+<span class="c1">// It&#39;s just one more step of validation before the response,</span>
+<span class="c1">// simple checks can be added here.</span>
+<span class="c1">//</span>
+<span class="c1">// It&#39;s just a showcase,</span>
+<span class="c1">// imagine the potentials this feature gives when designing a bigger application.</span>
+<span class="c1">//</span>
+<span class="c1">// This is called where the return value from a controller&#39;s method functions</span>
+<span class="c1">// is type of `Movie`.</span>
+<span class="c1">// For example the `controllers/movie_controller.go#GetBy`.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="nx">Movie</span><span class="p">)</span> <span class="nx">Dispatch</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">!</span><span class="nx">m</span><span class="p">.</span><span class="nx">IsValid</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">NotFound</span><span class="p">()</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">JSON</span><span class="p">(</span><span class="nx">m</span><span class="p">,</span> <span class="nx">context</span><span class="p">.</span><span class="nx">JSON</span><span class="p">{</span><span class="nx">Indent</span><span class="p">:</span> <span class="s">&quot; &quot;</span><span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>但是，因为 Movie structure 不包含任何敏感数据，我们将使用“datamodels”作为唯一的一个模型包，
+客户可以看到它的所有字段，我们不需要任何额外的功能或验证。</p>
+<p><strong>Controllers</strong></p>
+<p>处理Web请求，在服务端和客户端之间架起桥梁。</p>
+<p>而最重要的是，在iris里，<code class="docutils literal notranslate"><span class="pre">MovieService</span></code>是与<code class="docutils literal notranslate"><span class="pre">Controller</span></code>通信的。
+我们通常将所有与http相关的东西存储在名为“web”的不同文件夹中，所以所有控制器都可以在“web/controllers”内，
+请注意，“通常”您也可以使用其他设计模式，这取决于您。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file: web/controllers/movie_controller.go</span>
+
+<span class="kn">package</span> <span class="nx">controllers</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;errors&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/datamodels&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/services&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// MovieController is our /movies controller.</span>
+<span class="kd">type</span> <span class="nx">MovieController</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// Our MovieService, it&#39;s an interface which</span>
+    <span class="c1">// is binded from the main application.</span>
+    <span class="nx">Service</span> <span class="nx">services</span><span class="p">.</span><span class="nx">MovieService</span>
+<span class="p">}</span>
+
+<span class="c1">// Get returns list of the movies.</span>
+<span class="c1">// Demo:</span>
+<span class="c1">// curl -i http://localhost:8080/movies</span>
+<span class="c1">//</span>
+<span class="c1">// The correct way if you have sensitive data:</span>
+<span class="c1">// func (c *MovieController) Get() (results []viewmodels.Movie) {</span>
+<span class="c1">//     data := c.Service.GetAll()</span>
+<span class="c1">//</span>
+<span class="c1">//     for _, movie := range data {</span>
+<span class="c1">//         results = append(results, viewmodels.Movie{movie})</span>
+<span class="c1">//     }</span>
+<span class="c1">//     return</span>
+<span class="c1">// }</span>
+<span class="c1">// otherwise just return the datamodels.</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">MovieController</span><span class="p">)</span> <span class="nx">Get</span><span class="p">()</span> <span class="p">(</span><span class="nx">results</span> <span class="p">[]</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">GetAll</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1">// GetBy returns a movie.</span>
+<span class="c1">// Demo:</span>
+<span class="c1">// curl -i http://localhost:8080/movies/1</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">MovieController</span><span class="p">)</span> <span class="nx">GetBy</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="nx">movie</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="nx">found</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">GetByID</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="c1">// it will throw 404 if not found.</span>
+<span class="p">}</span>
+
+<span class="c1">// PutBy updates a movie.</span>
+<span class="c1">// Demo:</span>
+<span class="c1">// curl -i -X PUT -F &quot;genre=Thriller&quot; -F &quot;poster=@/Users/kataras/Downloads/out.gif&quot; http://localhost:8080/movies/1</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">MovieController</span><span class="p">)</span> <span class="nx">PutBy</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// get the request data for poster and genre</span>
+    <span class="nx">file</span><span class="p">,</span> <span class="nx">info</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">FormFile</span><span class="p">(</span><span class="s">&quot;poster&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">datamodels</span><span class="p">.</span><span class="nx">Movie</span><span class="p">{},</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="s">&quot;failed due form file &#39;poster&#39; missing&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="c1">// we don&#39;t need the file so close it now.</span>
+    <span class="nx">file</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+    <span class="c1">// imagine that is the url of the uploaded file...</span>
+    <span class="nx">poster</span> <span class="o">:=</span> <span class="nx">info</span><span class="p">.</span><span class="nx">Filename</span>
+    <span class="nx">genre</span> <span class="o">:=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">FormValue</span><span class="p">(</span><span class="s">&quot;genre&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">UpdatePosterAndGenreByID</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">poster</span><span class="p">,</span> <span class="nx">genre</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// DeleteBy deletes a movie.</span>
+<span class="c1">// Demo:</span>
+<span class="c1">// curl -i -X DELETE -u admin:password http://localhost:8080/movies/1</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">MovieController</span><span class="p">)</span> <span class="nx">DeleteBy</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">{</span>
+    <span class="nx">wasDel</span> <span class="o">:=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Service</span><span class="p">.</span><span class="nx">DeleteByID</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">wasDel</span> <span class="p">{</span>
+        <span class="c1">// return the deleted movie&#39;s ID</span>
+        <span class="k">return</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Map</span><span class="p">{</span><span class="s">&quot;deleted&quot;</span><span class="p">:</span> <span class="nx">id</span><span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// right here we can see that a method function can return any of those two types(map or int),</span>
+    <span class="c1">// we don&#39;t have to specify the return type to a specific type.</span>
+    <span class="k">return</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">StatusBadRequest</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>web/middleware 里的一个中间件</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file: web/middleware/basicauth.go</span>
+
+<span class="kn">package</span> <span class="nx">middleware</span>
+
+<span class="kn">import</span> <span class="s">&quot;github.com/kataras/iris/middleware/basicauth&quot;</span>
+
+<span class="c1">// BasicAuth middleware sample.</span>
+<span class="kd">var</span> <span class="nx">BasicAuth</span> <span class="p">=</span> <span class="nx">basicauth</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">basicauth</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+    <span class="nx">Users</span><span class="p">:</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+        <span class="s">&quot;admin&quot;</span><span class="p">:</span> <span class="s">&quot;password&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">main.go</span></code></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file: main.go</span>
+
+<span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/datasource&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/repositories&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/services&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/web/controllers&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/_examples/mvc/overview/web/middleware&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/mvc&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Logger</span><span class="p">().</span><span class="nx">SetLevel</span><span class="p">(</span><span class="s">&quot;debug&quot;</span><span class="p">)</span>
+
+    <span class="c1">// Load the template files.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">RegisterView</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;./web/views&quot;</span><span class="p">,</span> <span class="s">&quot;.html&quot;</span><span class="p">))</span>
+
+    <span class="c1">// Register our controllers.</span>
+    <span class="c1">// mvc.New(app.Party(&quot;/movies&quot;)).Handle(new(controllers.MovieController))</span>
+    <span class="c1">// But,</span>
+    <span class="c1">// You can also split the code you write to configure an mvc.Application</span>
+    <span class="c1">// using the `mvc.Configure` method, as shown below.</span>
+    <span class="nx">mvc</span><span class="p">.</span><span class="nx">Configure</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">Party</span><span class="p">(</span><span class="s">&quot;/movies&quot;</span><span class="p">),</span> <span class="nx">movies</span><span class="p">)</span>
+
+    <span class="c1">// http://localhost:8080/movies</span>
+    <span class="c1">// http://localhost:8080/movies/1</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span>
+        <span class="c1">// Start the web server at localhost:8080</span>
+        <span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;localhost:8080&quot;</span><span class="p">),</span>
+        <span class="c1">// disables updates:</span>
+        <span class="nx">iris</span><span class="p">.</span><span class="nx">WithoutVersionChecker</span><span class="p">,</span>
+        <span class="c1">// skip err server closed when CTRL/CMD+C pressed:</span>
+        <span class="nx">iris</span><span class="p">.</span><span class="nx">WithoutServerError</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">ErrServerClosed</span><span class="p">),</span>
+        <span class="c1">// enables faster json serialization and more:</span>
+        <span class="nx">iris</span><span class="p">.</span><span class="nx">WithOptimizations</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// note the mvc.Application, it&#39;s not iris.Application.</span>
+<span class="kd">func</span> <span class="nx">movies</span><span class="p">(</span><span class="nx">app</span> <span class="o">*</span><span class="nx">mvc</span><span class="p">.</span><span class="nx">Application</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Add the basic authentication(admin:password) middleware</span>
+    <span class="c1">// for the /movies based requests.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Router</span><span class="p">.</span><span class="nx">Use</span><span class="p">(</span><span class="nx">middleware</span><span class="p">.</span><span class="nx">BasicAuth</span><span class="p">)</span>
+
+    <span class="c1">// Create our movie repository with some (memory) data from the datasource.</span>
+    <span class="nx">repo</span> <span class="o">:=</span> <span class="nx">repositories</span><span class="p">.</span><span class="nx">NewMovieRepository</span><span class="p">(</span><span class="nx">datasource</span><span class="p">.</span><span class="nx">Movies</span><span class="p">)</span>
+    <span class="c1">// Create our movie service, we will bind it to the movie app&#39;s dependencies.</span>
+    <span class="nx">movieService</span> <span class="o">:=</span> <span class="nx">services</span><span class="p">.</span><span class="nx">NewMovieService</span><span class="p">(</span><span class="nx">repo</span><span class="p">)</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Register</span><span class="p">(</span><span class="nx">movieService</span><span class="p">)</span>
+
+    <span class="c1">// serve our movies controller.</span>
+    <span class="c1">// Note that you can serve more than one controller</span>
+    <span class="c1">// you can also create child mvc apps using the `movies.Party(relativePath)` or `movies.Clone(app.Party(...))`</span>
+    <span class="c1">// if you want.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Handle</span><span class="p">(</span><span class="nb">new</span><span class="p">(</span><span class="nx">controllers</span><span class="p">.</span><span class="nx">MovieController</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mvc-loves-websockets">
+<span id="mvc-loves-websockets"></span><h2>MVC loves Websockets<a class="headerlink" href="#mvc-loves-websockets" title="永久链接至标题">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;sync/atomic&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/mvc&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/websocket&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="c1">// load templates.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">RegisterView</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;./views&quot;</span><span class="p">,</span> <span class="s">&quot;.html&quot;</span><span class="p">))</span>
+
+    <span class="c1">// render the ./views/index.html.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">View</span><span class="p">(</span><span class="s">&quot;index.html&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">mvc</span><span class="p">.</span><span class="nx">Configure</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">Party</span><span class="p">(</span><span class="s">&quot;/websocket&quot;</span><span class="p">),</span> <span class="nx">configureMVC</span><span class="p">)</span>
+    <span class="c1">// Or mvc.New(app.Party(...)).Configure(configureMVC)</span>
+
+    <span class="c1">// http://localhost:8080</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">configureMVC</span><span class="p">(</span><span class="nx">m</span> <span class="o">*</span><span class="nx">mvc</span><span class="p">.</span><span class="nx">Application</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ws</span> <span class="o">:=</span> <span class="nx">websocket</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">websocket</span><span class="p">.</span><span class="nx">Config</span><span class="p">{})</span>
+    <span class="c1">// http://localhost:8080/websocket/iris-ws.js</span>
+    <span class="nx">m</span><span class="p">.</span><span class="nx">Router</span><span class="p">.</span><span class="nx">Any</span><span class="p">(</span><span class="s">&quot;/iris-ws.js&quot;</span><span class="p">,</span> <span class="nx">websocket</span><span class="p">.</span><span class="nx">ClientHandler</span><span class="p">())</span>
+
+    <span class="c1">// This will bind the result of ws.Upgrade which is a websocket.Connection</span>
+    <span class="c1">// to the controller(s) served by the `m.Handle`.</span>
+    <span class="nx">m</span><span class="p">.</span><span class="nx">Register</span><span class="p">(</span><span class="nx">ws</span><span class="p">.</span><span class="nx">Upgrade</span><span class="p">)</span>
+    <span class="nx">m</span><span class="p">.</span><span class="nx">Handle</span><span class="p">(</span><span class="nb">new</span><span class="p">(</span><span class="nx">websocketController</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">visits</span> <span class="kt">uint64</span>
+
+<span class="kd">func</span> <span class="nx">increment</span><span class="p">()</span> <span class="kt">uint64</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">AddUint64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">visits</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">decrement</span><span class="p">()</span> <span class="kt">uint64</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">AddUint64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">visits</span><span class="p">,</span> <span class="p">^</span><span class="nb">uint64</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">websocketController</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// Note that you could use an anonymous field as well, it doesn&#39;t matter, binder will find it.</span>
+    <span class="c1">//</span>
+    <span class="c1">// This is the current websocket connection, each client has its own instance of the *websocketController.</span>
+    <span class="nx">Conn</span> <span class="nx">websocket</span><span class="p">.</span><span class="nx">Connection</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">websocketController</span><span class="p">)</span> <span class="nx">onLeave</span><span class="p">(</span><span class="nx">roomName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// visits--</span>
+    <span class="nx">newCount</span> <span class="o">:=</span> <span class="nx">decrement</span><span class="p">()</span>
+    <span class="c1">// This will call the &quot;visit&quot; event on all clients, except the current one,</span>
+    <span class="c1">// (it can&#39;t because it&#39;s left but for any case use this type of design)</span>
+    <span class="nx">c</span><span class="p">.</span><span class="nx">Conn</span><span class="p">.</span><span class="nx">To</span><span class="p">(</span><span class="nx">websocket</span><span class="p">.</span><span class="nx">Broadcast</span><span class="p">).</span><span class="nx">Emit</span><span class="p">(</span><span class="s">&quot;visit&quot;</span><span class="p">,</span> <span class="nx">newCount</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">websocketController</span><span class="p">)</span> <span class="nx">update</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// visits++</span>
+    <span class="nx">newCount</span> <span class="o">:=</span> <span class="nx">increment</span><span class="p">()</span>
+
+    <span class="c1">// This will call the &quot;visit&quot; event on all clients, including the current</span>
+    <span class="c1">// with the &#39;newCount&#39; variable.</span>
+    <span class="c1">//</span>
+    <span class="c1">// There are many ways that u can do it and faster, for example u can just send a new visitor</span>
+    <span class="c1">// and client can increment itself, but here we are just &quot;showcasing&quot; the websocket controller.</span>
+    <span class="nx">c</span><span class="p">.</span><span class="nx">Conn</span><span class="p">.</span><span class="nx">To</span><span class="p">(</span><span class="nx">websocket</span><span class="p">.</span><span class="nx">All</span><span class="p">).</span><span class="nx">Emit</span><span class="p">(</span><span class="s">&quot;visit&quot;</span><span class="p">,</span> <span class="nx">newCount</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">websocketController</span><span class="p">)</span> <span class="nx">Get</span><span class="p">(</span> <span class="cm">/* websocket.Connection could be lived here as well, it doesn&#39;t matter */</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">c</span><span class="p">.</span><span class="nx">Conn</span><span class="p">.</span><span class="nx">OnLeave</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">onLeave</span><span class="p">)</span>
+    <span class="nx">c</span><span class="p">.</span><span class="nx">Conn</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;visit&quot;</span><span class="p">,</span> <span class="nx">c</span><span class="p">.</span><span class="nx">update</span><span class="p">)</span>
+
+    <span class="c1">// call it after all event callbacks registration.</span>
+    <span class="nx">c</span><span class="p">.</span><span class="nx">Conn</span><span class="p">.</span><span class="nx">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mvc-loves-sessions">
+<span id="mvc-loves-sessions"></span><h2>MVC loves Sessions<a class="headerlink" href="#mvc-loves-sessions" title="永久链接至标题">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// +build go1.9</span>
+
+<span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;time&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/mvc&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/sessions&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// VisitController handles the root route.</span>
+<span class="kd">type</span> <span class="nx">VisitController</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// the current request session,</span>
+    <span class="c1">// its initialization happens by the dependency function that we&#39;ve added to the `visitApp`.</span>
+    <span class="nx">Session</span> <span class="o">*</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">Session</span>
+
+    <span class="c1">// A time.time which is binded from the MVC,</span>
+    <span class="c1">// order of binded fields doesn&#39;t matter.</span>
+    <span class="nx">StartTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+<span class="p">}</span>
+
+<span class="c1">// Get handles</span>
+<span class="c1">// Method: GET</span>
+<span class="c1">// Path: http://localhost:8080</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">VisitController</span><span class="p">)</span> <span class="nx">Get</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="c1">// it increments a &quot;visits&quot; value of integer by one,</span>
+    <span class="c1">// if the entry with key &#39;visits&#39; doesn&#39;t exist it will create it for you.</span>
+    <span class="nx">visits</span> <span class="o">:=</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Session</span><span class="p">.</span><span class="nx">Increment</span><span class="p">(</span><span class="s">&quot;visits&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1">// write the current, updated visits.</span>
+    <span class="nx">since</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Now</span><span class="p">().</span><span class="nx">Sub</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">StartTime</span><span class="p">).</span><span class="nx">Seconds</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;%d visit from my current session in %0.1f seconds of server&#39;s up-time&quot;</span><span class="p">,</span>
+        <span class="nx">visits</span><span class="p">,</span> <span class="nx">since</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">newApp</span><span class="p">()</span> <span class="o">*</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Application</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="nx">sess</span> <span class="o">:=</span> <span class="nx">sessions</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span><span class="nx">Cookie</span><span class="p">:</span> <span class="s">&quot;mysession_cookie_name&quot;</span><span class="p">})</span>
+
+    <span class="nx">visitApp</span> <span class="o">:=</span> <span class="nx">mvc</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">Party</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">))</span>
+    <span class="c1">// bind the current *session.Session, which is required, to the `VisitController.Session`</span>
+    <span class="c1">// and the time.Now() to the `VisitController.StartTime`.</span>
+    <span class="nx">visitApp</span><span class="p">.</span><span class="nx">Register</span><span class="p">(</span>
+        <span class="c1">// if dependency is a function which accepts</span>
+        <span class="c1">// a Context and returns a single value</span>
+        <span class="c1">// then the result type of this function is resolved by the controller</span>
+        <span class="c1">// and on each request it will call the function with its Context</span>
+        <span class="c1">// and set the result(the *sessions.Session here) to the controller&#39;s field.</span>
+        <span class="c1">//</span>
+        <span class="c1">// If dependencies are registered without field or function&#39;s input arguments as</span>
+        <span class="c1">// consumers then those dependencies are being ignored before the server ran,</span>
+        <span class="c1">// so you can bind many dependecies and use them in different controllers.</span>
+        <span class="nx">sess</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span>
+        <span class="nx">time</span><span class="p">.</span><span class="nx">Now</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="nx">visitApp</span><span class="p">.</span><span class="nx">Handle</span><span class="p">(</span><span class="nb">new</span><span class="p">(</span><span class="nx">VisitController</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nx">app</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">newApp</span><span class="p">()</span>
+
+    <span class="c1">// 1. open the browser (no in private mode)</span>
+    <span class="c1">// 2. navigate to http://localhost:8080</span>
+    <span class="c1">// 3. refresh the page some times</span>
+    <span class="c1">// 4. close the browser</span>
+    <span class="c1">// 5. re-open the browser and re-play 2.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">),</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">WithoutVersionChecker</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-singleton-controller">
+<span id="a-singleton-controller"></span><h2>A Singleton Controller<a class="headerlink" href="#a-singleton-controller" title="永久链接至标题">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;sync/atomic&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/mvc&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="nx">mvc</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">Party</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)).</span><span class="nx">Handle</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">globalVisitorsController</span><span class="p">{</span><span class="nx">visits</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+
+    <span class="c1">// http://localhost:8080</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">globalVisitorsController</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// When a singleton controller is used then concurent safe access is up to the developers, because</span>
+    <span class="c1">// all clients share the same controller instance instead.</span>
+    <span class="c1">// Note that any controller&#39;s methods</span>
+    <span class="c1">// are per-client, but the struct&#39;s field can be shared across multiple clients if the structure</span>
+    <span class="c1">// does not have any dynamic struct field dependencies that depend on the iris.Context</span>
+    <span class="c1">// and ALL field&#39;s values are NOT zero, at this case we use uint64 which it&#39;s no zero (even if we didn&#39;t set it</span>
+    <span class="c1">// manually ease-of-understand reasons) because it&#39;s a value of &amp;{0}.</span>
+    <span class="c1">// All the above declares a Singleton, note that you don&#39;t have to write a single line of code to do this, Iris is smart enough.</span>
+    <span class="c1">//</span>
+    <span class="c1">// see `Get`.</span>
+    <span class="nx">visits</span> <span class="kt">uint64</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">globalVisitorsController</span><span class="p">)</span> <span class="nx">Get</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="nx">count</span> <span class="o">:=</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">AddUint64</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">c</span><span class="p">.</span><span class="nx">visits</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;Total visitors: %d&quot;</span><span class="p">,</span> <span class="nx">count</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>More folder structure guidelines can be found at the <a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/#structuring">https://github.com/kataras/iris/tree/master/_examples/#structuring</a> section.</p>
+<p>Follow the examples below</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/kataras/iris/blob/master/_examples/mvc/hello-world/main.go">Hello world</a> <strong>UPDATED</strong></li>
+<li><a class="reference external" href="https://github.com/kataras/iris/blob/master/_examples/mvc/session-controller/main.go">Session Controller</a> <strong>UPDATED</strong></li>
+<li><a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/mvc/overview">Overview - Plus Repository and Service layers</a> <strong>UPDATED</strong></li>
+<li><a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/mvc/login">Login showcase - Plus Repository and Service layers</a> <strong>UPDATED</strong></li>
+<li><a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/mvc/singleton">Singleton</a> <strong>NEW</strong></li>
+<li><a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/mvc/websocket">Websocket Controller</a> <strong>NEW</strong></li>
+<li><a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/mvc/middleware">Register Middleware</a> <strong>NEW</strong></li>
+<li><a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/tutorial/vuejs-todo-mvc">Vue.js Todo MVC</a> <strong>NEW</strong></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="View.html" class="btn btn-neutral float-right" title="View" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="错误处理.html" class="btn btn-neutral" title="错误处理" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, TristeYen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'10.6.5',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

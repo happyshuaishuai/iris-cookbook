@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>配置 &mdash; iris-cookbook 10.6.5 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Routing" href="Routing.html" />
+    <link rel="prev" title="Hosts" href="Host.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iris-cookbook
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="简介.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="特性.html">特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="版本.html">版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="安装.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="开始使用.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Host.html">Hosts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Routing.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="错误处理.html">错误处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MVC.html">MVC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="View.html">View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sessions.html">Sessions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Websockets.html">Websockets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iris-cookbook</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>配置</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/配置.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="">
+<span id="id1"></span><h1>配置<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<p>所有配置的值都具有默认值，它会如你期望的那样使用 <code class="docutils literal notranslate"><span class="pre">iris.New()</span></code>
+在监听功能之前配置是无用的，所以它应该在<code class="docutils literal notranslate"><span class="pre">Application#Run/2</span></code>（第二个参数）上传递。</p>
+<p>Iris有一个名为<code class="docutils literal notranslate"><span class="pre">Configurator</span></code>的类型，它是一个<code class="docutils literal notranslate"><span class="pre">func(*</span> <span class="pre">iris.Application)</span></code>，
+任何完成此操作的函数都可以在<code class="docutils literal notranslate"><span class="pre">Application＃Configure</span></code> 或 <code class="docutils literal notranslate"><span class="pre">Application#Run/2</span></code>中传递。
+<code class="docutils literal notranslate"><span class="pre">Application#ConfigurationReadOnly()</span></code>返回配置值。</p>
+<p><code class="docutils literal notranslate"><span class="pre">.Run</span></code> <strong>by</strong> <code class="docutils literal notranslate"><span class="pre">Configuration</span></code> <strong>struct</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;b&gt;Hello!&lt;/b&gt;&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="c1">// [...]</span>
+
+    <span class="c1">// Good when you want to modify the whole configuration.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">),</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">WithConfiguration</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Configuration</span><span class="p">{</span>
+        <span class="nx">DisableStartupLog</span><span class="p">:</span>                 <span class="kc">false</span><span class="p">,</span>
+        <span class="nx">DisableInterruptHandler</span><span class="p">:</span>           <span class="kc">false</span><span class="p">,</span>
+        <span class="nx">DisablePathCorrection</span><span class="p">:</span>             <span class="kc">false</span><span class="p">,</span>
+        <span class="nx">EnablePathEscape</span><span class="p">:</span>                  <span class="kc">false</span><span class="p">,</span>
+        <span class="nx">FireMethodNotAllowed</span><span class="p">:</span>              <span class="kc">false</span><span class="p">,</span>
+        <span class="nx">DisableBodyConsumptionOnUnmarshal</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="nx">DisableAutoFireStatusCode</span><span class="p">:</span>         <span class="kc">false</span><span class="p">,</span>
+        <span class="nx">TimeFormat</span><span class="p">:</span>                        <span class="s">&quot;Mon, 02 Jan 2006 15:04:05 GMT&quot;</span><span class="p">,</span>
+        <span class="nx">Charset</span><span class="p">:</span>                           <span class="s">&quot;UTF-8&quot;</span><span class="p">,</span>
+    <span class="p">}))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">.Run</span></code> <strong>by options</strong></p>
+<div class="highlight-Go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;b&gt;Hello!&lt;/b&gt;&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="c1">// [...]</span>
+
+    <span class="c1">// 当您想要更改某些配置字段时</span>
+    <span class="c1">// Prefix: &quot;With&quot;, 代码编辑器将帮助您浏览所有配置选项。</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">),</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">WithoutStartupLog</span><span class="p">,</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">WithCharset</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">))</span>
+
+    <span class="c1">// or before run:</span>
+    <span class="c1">// app.Configure(iris.WithoutStartupLog, iris.WithCharset(&quot;UTF-8&quot;))</span>
+    <span class="c1">// app.Run(iris.Addr(&quot;:8080&quot;))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">.Run</span></code> <strong>by TOML config file</strong></p>
+<div class="highlight-tml notranslate"><div class="highlight"><pre><span></span>DisablePathCorrection = false
+EnablePathEscape = false
+FireMethodNotAllowed = true
+DisableBodyConsumptionOnUnmarshal = false
+TimeFormat = &quot;Mon, 01 Jan 2006 15:04:05 GMT&quot;
+Charset = &quot;UTF-8&quot;
+
+[Other]
+    MyServerName = &quot;iris&quot;
+</pre></div>
+</div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;b&gt;Hello!&lt;/b&gt;&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="c1">// [...]</span>
+
+    <span class="c1">// 有两种配置，一种用与开发， 另一种用于生成</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">),</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">WithConfiguration</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">TOML</span><span class="p">(</span><span class="s">&quot;./configs/iris.tml&quot;</span><span class="p">)))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">.Run</span></code> <strong>by YAML config file</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">DisablePathCorrection</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="l l-Scalar l-Scalar-Plain">EnablePathEscape</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="l l-Scalar l-Scalar-Plain">FireMethodNotAllowed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="l l-Scalar l-Scalar-Plain">DisableBodyConsumptionOnUnmarshal</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="l l-Scalar l-Scalar-Plain">TimeFormat</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Mon, 01 Jan 2006 15:04:05 GMT</span>
+<span class="l l-Scalar l-Scalar-Plain">Charset</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+</pre></div>
+</div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;b&gt;Hello!&lt;/b&gt;&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="c1">// [...]</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">),</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">WithConfiguration</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">YAML</span><span class="p">(</span><span class="s">&quot;./configs/iris.yml&quot;</span><span class="p">)))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Built’n Configurators</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>// WithoutServerError 错误将导致忽略主应用程序“Run”函数中匹配的“错误”。
+//
+// Usage:
+// err := app.Run(iris.Addr(&quot;:8080&quot;), iris.WithoutServerError(iris.ErrServerClosed))
+// 如果服务的错误是 `http/iris#ErrServerClosed` 则返回“nil
+//
+// See `Configuration#IgnoreServerErrors []string` too.
+//
+// Example: https://github.com/kataras/iris/tree/master/_examples/http-listening/listen-addr/omit-server-errors
+func WithoutServerError(errors ...error) Configurator
+
+// 当主服务器打开时，WithoutStartupLog关闭信息发送一次到终端。
+
+// WithoutInterruptHandler disables 当控制台/cmd+C按下时，服务将优雅的关闭
+var WithoutInterruptHandler
+
+// WithoutPathCorrection disables the PathCorrection setting.
+//
+// See `Configuration`.
+var WithoutPathCorrection
+
+// WithoutBodyConsumptionOnUnmarshal disables BodyConsumptionOnUnmarshal setting.
+//
+// See `Configuration`.
+var WithoutBodyConsumptionOnUnmarshal
+
+// WithoutAutoFireStatusCode disables the AutoFireStatusCode setting.
+//
+// See `Configuration`.
+var WithoutAutoFireStatusCode
+
+// WithPathEscape enanbles the PathEscape setting.
+//
+// See `Configuration`.
+var WithPathEscape
+
+// WithOptimizations可以强制应用程序进行优化，以便在可能的情况下实现最佳性能。
+//
+// See `Configuration`.
+var WithOptimizations
+
+// WithFireMethodNotAllowed enanbles the FireMethodNotAllowed setting.
+//
+// See `Configuration`.
+var WithFireMethodNotAllowed
+
+// WithTimeFormat sets the TimeFormat setting.
+//
+// See `Configuration`.
+func WithTimeFormat(timeformat string) Configurator
+
+// WithCharset sets the Charset setting.
+//
+// See `Configuration`.
+func WithCharset(charset string) Configurator
+
+// WithRemoteAddrHeader enables or adds a new or existing request header name
+// that can be used to validate the client&#39;s real IP.
+//
+// Existing values are:
+// &quot;X-Real-Ip&quot;:             false,
+// &quot;X-Forwarded-For&quot;:       false,
+// &quot;CF-Connecting-IP&quot;: false
+//
+// Look `context.RemoteAddr()` for more.
+func WithRemoteAddrHeader(headerName string) Configurator
+
+// WithoutRemoteAddrHeader disables an existing request header name
+// that can be used to validate the client&#39;s real IP.
+//
+// Existing values are:
+// &quot;X-Real-Ip&quot;:             false,
+// &quot;X-Forwarded-For&quot;:       false,
+// &quot;CF-Connecting-IP&quot;: false
+//
+// Look `context.RemoteAddr()` for more.
+func WithoutRemoteAddrHeader(headerName string) Configurator
+
+// WithOtherValue adds a value based on a key to the Other setting.
+//
+// See `Configuration`.
+func WithOtherValue(key string, val interface{}) Configurator
+</pre></div>
+</div>
+<p><strong>自定义配置</strong></p>
+<p>使用<code class="docutils literal notranslate"><span class="pre">Configurator</span></code>，开发人员可以轻松地模块化他们的应用程序。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file counter/counter.go</span>
+<span class="kn">package</span> <span class="nx">counter</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;time&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris/core/host&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">Configurator</span><span class="p">(</span><span class="nx">app</span> <span class="o">*</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Application</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">counterValue</span> <span class="o">:=</span> <span class="mi">0</span>
+
+    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">ticker</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nx">NewTicker</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="k">range</span> <span class="nx">ticker</span><span class="p">.</span><span class="nx">C</span> <span class="p">{</span>
+            <span class="nx">counterValue</span><span class="o">++</span>
+        <span class="p">}</span>
+
+        <span class="nx">app</span><span class="p">.</span><span class="nx">ConfigureHost</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">h</span> <span class="o">*</span><span class="nx">host</span><span class="p">.</span><span class="nx">Supervisor</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// &lt;- HERE: IMPORTANT</span>
+            <span class="nx">h</span><span class="p">.</span><span class="nx">RegisterOnShutdown</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+                <span class="nx">ticker</span><span class="p">.</span><span class="nx">Stop</span><span class="p">()</span>
+            <span class="p">})</span>
+        <span class="p">})</span>
+    <span class="p">}()</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/counter&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;Counter value = %d&quot;</span><span class="p">,</span> <span class="nx">counterValue</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file: main.go</span>
+<span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;counter&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Configure</span><span class="p">(</span><span class="nx">counter</span><span class="p">.</span><span class="nx">Configurator</span><span class="p">)</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Routing.html" class="btn btn-neutral float-right" title="Routing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Host.html" class="btn btn-neutral" title="Hosts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, TristeYen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'10.6.5',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

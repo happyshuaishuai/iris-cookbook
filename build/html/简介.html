@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>简介 &mdash; iris-cookbook 10.6.5 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="特性" href="特性.html" />
+    <link rel="prev" title="欢迎阅读 iris-cookbook 文档!" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iris-cookbook
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">简介</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#web">为什么要选择新的WEB框架</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="特性.html">特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="版本.html">版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="安装.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="开始使用.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Host.html">Hosts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="配置.html">配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Routing.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="错误处理.html">错误处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MVC.html">MVC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="View.html">View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sessions.html">Sessions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Websockets.html">Websockets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iris-cookbook</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>简介</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/简介.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="">
+<span id="id1"></span><h1>简介<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<div class="section" id="web">
+<span id="web"></span><h2>为什么要选择新的WEB框架<a class="headerlink" href="#web" title="永久链接至标题">¶</a></h2>
+<p><strong>为什么</strong></p>
+<p>用Go来构建可扩展的web后端应用程序是一个非常不错的技术栈选择。</p>
+<p>当您考虑构建Web应用程序和Web APIs，或者只是在Go中构建HTTP服务器时，您是否会想到标准的 net/http 包？
+然后，您必须处理一些常见情况，如动态路由（a.k.a参数化），安全性和身份验证，实时通信以及 net/http 无法解决的许多其他问题。</p>
+<p><code class="docutils literal notranslate"><span class="pre">net/http</span></code>包不满足快速构建设计良好的后端Web系统，当你意识到这点时，你可能会有以下困惑：</p>
+<ul class="simple">
+<li>Ok, <code class="docutils literal notranslate"><span class="pre">net/http</span></code>包不适合我，但框架那么多，我该选择那一个？！</li>
+<li>他们每个人都告诉我这是最好的，我不知道该怎么办！</li>
+</ul>
+<hr class="docutils" />
+<p><strong>真相</strong></p>
+<p>我用’wrk’和’ab’做了一些深入的研究和基准测试，以便选择适合我和我的新项目的框架。遗憾的是，结果对我来说真的很失望。</p>
+<p>我开始疑惑，golang在web方面并不如我网上所看见的那么快，但是，在我使用golang之前我一直使用nodejs做开发，我告诉自己：</p>
+<ul class="simple">
+<li>‘Makis，不要失去希望，至少给Golang一个机会。尝试构建一些全新的东西，而不是基于你之前看到的“慢”代码;了解这种语言的秘密，并让其他人跟随你的步伐！’</li>
+</ul>
+<p>这些是我当天告诉自己的话[2016年3月13日]。</p>
+<p>同一天晚上，我正在读一本关于希腊神话的书。我看到了一个古老的女神的名字，并立即受到启发，为这个新的web框架（我已经开始写作）命名 - Iris。</p>
+<p>两个月后，我正在写这篇介绍。</p>
+<p>我还在这里，<a class="reference external" href="https://github.com/kataras/iris#benchmarks">因为Iris已成功成为最快的web框架。</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="特性.html" class="btn btn-neutral float-right" title="特性" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="欢迎阅读 iris-cookbook 文档!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, TristeYen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'10.6.5',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

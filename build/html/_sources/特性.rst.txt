@@ -1,0 +1,47 @@
+特性
+=============
+
+**主要特性**
+
+- 专注与高性能
+- 简单流利的API
+- 高度可定制
+- 强大的路由和中间件生态系统
+    + Iris构建独特的表现路径解释的RESTful APIs
+    + 动态路径参数化或通配符路由与静态路由不冲突
+    + 使用重定向选项从URL中删除尾部斜杠
+    + 虚拟主机和子域变得简单
+    + 分组APIs和静态或者甚至动态子域
+    + net/http 和 negroni-like 类似的处理程序通过 iris.FromStd 兼容
+    + 注册任何自定义的HTTP error处理
+    + 在需要时进行事务和回滚
+    + 在需要时缓存响应
+    + 一个单一功能服务于你的嵌入式 assets，始终和 go-bindata 兼容
+    + HTTP to HTTPS
+      * HTTP to HTTPS WWW
+    + 了解与您目前所见的不同的原因
+    + 新颖的MVC
+- Context
+    + 高度可扩展的丰富内容呈现（Markdown，JSON，JSONP，XML ......）
+    + 正文绑定器和发送HTTP响应的便捷功能
+    + 限制请求正文
+    + 提供静态资源或者嵌入式assets
+    + 本地化i18N
+    + 压缩（Gzip...）
+- 认证
+    + 基本认证
+    + OAuth，OAuth2支持27个以上的热门网站
+    + JWT
+- Server
+    + 通过TLS提供服务时，自动安装和提供来自https://letsencrypt.org的证书
+    + 默认情况下正常关闭
+    + 在关机、错误、中断时注册事件
+    + 连接多个服务器，与 net/http＃Server 完全兼容
+- 视图系统：支持5个模板引擎。与 html/template 模板完全兼容
+- HTTP Sessions library[如果你愿意，你仍然可以使用你最喜欢的]
+- Websocket library，其API类似于socket.io [如果你愿意，你仍然可以使用你最喜欢的]
+- 热更新源代码
+- 集成 Typescript + Web IDE
+
+Iris是最具特色的网络框架之一，并非所有功能都在这里，也不要指望我在这本gitbook中写下他们所有的用法，
+如果您发现我遗失了某些内容，请向图书库存储PR。

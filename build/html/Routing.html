@@ -1,0 +1,1302 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Routing &mdash; iris-cookbook 10.6.5 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="错误处理" href="错误处理.html" />
+    <link rel="prev" title="配置" href="配置.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iris-cookbook
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="简介.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="特性.html">特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="版本.html">版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="安装.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="开始使用.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Host.html">Hosts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="配置.html">配置</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Routing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#context">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#path-parameters">Path Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reverse-routes">Reverse routes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#middleware">Middleware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wrapping-the-router">Wrapping the Router</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="错误处理.html">错误处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MVC.html">MVC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="View.html">View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sessions.html">Sessions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Websockets.html">Websockets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iris-cookbook</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Routing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Routing.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="routing">
+<span id="routing"></span><h1>Routing<a class="headerlink" href="#routing" title="永久链接至标题">¶</a></h1>
+<p><strong>Handlers</strong></p>
+<p>请求处理</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 响应一个HTTP请求并进行处理</span>
+<span class="c1">// 返回头与数据写入 Context.ResponseWriter()</span>
+<span class="c1">// 返回请求完成的信号</span>
+<span class="c1">// 之后使用上下文是无效的，同时完成处理程序调用   </span>
+<span class="c1">//</span>
+<span class="c1">// 根据客户端HTTP软件、HTTP协议版本以及客户端和IRIS服务器之间的任何中介</span>
+<span class="c1">// 在写入 context.ResponseWriter() 之后，不可能读取 Context.Request().Body</span>
+<span class="c1">// 谨慎的处理程序应该首先读取 Context.Request().Body</span>
+<span class="c1">//</span>
+<span class="c1">// 除了读取 body 外，处理程序不应修改所提供的 Context 。</span>
+<span class="c1">//</span>
+<span class="c1">// If Handler panics, the server (the caller of Handler) assumes that</span>
+<span class="c1">// the effect of the panic was isolated to the active request.</span>
+<span class="c1">// It recovers the panic, logs a stack trace to the server error log</span>
+<span class="c1">// and hangs up the connection.</span>
+
+<span class="kd">type</span> <span class="nx">Handler</span> <span class="kd">func</span><span class="p">(</span><span class="nx">Context</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>一旦 Handler 被注册后，我们可以使用返回的 <a class="reference external" href="https://godoc.org/github.com/kataras/iris/core/router#Route"><code class="docutils literal notranslate"><span class="pre">Route</span></code></a> 实例为处理程序注册命名，以便在代码或模板中更容易查找。</p>
+<p>有关更多信息，请查看’路由和反向查找’部分。</p>
+<p><strong>API</strong></p>
+<p>支持所有HTTP方法，开发人员还可以为不同方法注册相同路径的处理</p>
+<p>第一个参数是HTTP方法，第二个参数是路由的请求路径，当用户从服务器请求该特定资源路径时,
+第三个可变参数应包含一个或多个由注册表顺序执行的 iris.Handler 。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">Handle</span><span class="p">(</span><span class="s">&quot;GET&quot;</span><span class="p">,</span> <span class="s">&quot;/contact&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;h1&gt; Hello from /contact &lt;/h1&gt;&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>为了让开发人员更轻松，iris为所有HTTP方法提供函数。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+<span class="c1">// Method: &quot;GET&quot;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="c1">// Method: &quot;POST&quot;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Post</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="c1">// Method: &quot;PUT&quot;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Put</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="c1">// Method: &quot;DELETE&quot;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Delete</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="c1">// Method: &quot;OPTIONS&quot;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Options</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="c1">// Method: &quot;TRACE&quot;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Trace</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="c1">// Method: &quot;CONNECT&quot;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Connect</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="c1">// Method: &quot;HEAD&quot;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Head</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="c1">// Method: &quot;PATCH&quot;</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Patch</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="c1">// register the route for all HTTP Methods</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Any</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">handler</span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">handler</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">){</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;Hello from method: %s and path: %s&quot;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Method</span><span class="p">(),</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Path</span><span class="p">())</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Grouping Routes</strong></p>
+<p>由路径前缀分组的一组路由可以（可选）共享相同的中间件处理程序和模板布局, 也可以多组嵌套。</p>
+<p><code class="docutils literal notranslate"><span class="pre">.Party</span></code>用于分组路由，开发人员可以声明无限数量的（嵌套）组。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+<span class="nx">users</span> <span class="o">:=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">Party</span><span class="p">(</span><span class="s">&quot;/users&quot;</span><span class="p">,</span> <span class="nx">myAuthMiddlewareHandler</span><span class="p">)</span>
+
+<span class="c1">// http://localhost:8080/users/42/profile</span>
+<span class="nx">users</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/{id:int}/profile&quot;</span><span class="p">,</span> <span class="nx">userProfileHandler</span><span class="p">)</span>
+<span class="c1">// http://localhost:8080/users/messages/1</span>
+<span class="nx">users</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/inbox/{id:int}&quot;</span><span class="p">,</span> <span class="nx">userMessageHandler</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>也可以使用接收子路由器（Party）的功能编写相同的内容。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">PartyFunc</span><span class="p">(</span><span class="s">&quot;/users&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">users</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Party</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">users</span><span class="p">.</span><span class="nx">Use</span><span class="p">(</span><span class="nx">myAuthMiddlewareHandler</span><span class="p">)</span>
+
+    <span class="c1">// http://localhost:8080/users/42/profile</span>
+    <span class="nx">users</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/{id:int}/profile&quot;</span><span class="p">,</span> <span class="nx">userProfileHandler</span><span class="p">)</span>
+    <span class="c1">// http://localhost:8080/users/messages/1</span>
+    <span class="nx">users</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/inbox/{id:int}&quot;</span><span class="p">,</span> <span class="nx">userMessageHandler</span><span class="p">)</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="context">
+<span id="context"></span><h2>Context<a class="headerlink" href="#context" title="永久链接至标题">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">iris.Context</span></code> <a class="reference external" href="https://github.com/kataras/iris/blob/master/context/context.go">源代码</a>可以在这里找到。使用具有自动补全功能的IDE编辑器保持记录将对您有所帮助。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Context is the midle-man server&#39;s &quot;object&quot; for the clients.</span>
+<span class="c1">//</span>
+<span class="c1">// A New context is being acquired from a sync.Pool on each connection.</span>
+<span class="c1">// The Context is the most important thing on the iris&#39;s http flow.</span>
+<span class="c1">//</span>
+<span class="c1">// Developers send responses to the client&#39;s request through a Context.</span>
+<span class="c1">// Developers get request information from the client&#39;s request a Context.</span>
+<span class="c1">//</span>
+<span class="c1">// This context is an implementation of the context.Context sub-package.</span>
+<span class="c1">// context.Context is very extensible and developers can override</span>
+<span class="c1">// its methods if that is actually needed.</span>
+<span class="kd">type</span> <span class="nx">Context</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="c1">// ResponseWriter returns an http.ResponseWriter compatible response writer, as expected.</span>
+    <span class="nx">ResponseWriter</span><span class="p">()</span> <span class="nx">ResponseWriter</span>
+    <span class="c1">// ResetResponseWriter should change or upgrade the Context&#39;s ResponseWriter.</span>
+    <span class="nx">ResetResponseWriter</span><span class="p">(</span><span class="nx">ResponseWriter</span><span class="p">)</span>
+
+    <span class="c1">// Request returns the original *http.Request, as expected.</span>
+    <span class="nx">Request</span><span class="p">()</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span>
+
+    <span class="c1">// SetCurrentRouteName sets the route&#39;s name internally,</span>
+    <span class="c1">// in order to be able to find the correct current &quot;read-only&quot; Route when</span>
+    <span class="c1">// end-developer calls the `GetCurrentRoute()` function.</span>
+    <span class="c1">// It&#39;s being initialized by the Router, if you change that name</span>
+    <span class="c1">// manually nothing really happens except that you&#39;ll get other</span>
+    <span class="c1">// route via `GetCurrentRoute()`.</span>
+    <span class="c1">// Instead, to execute a different path</span>
+    <span class="c1">// from this context you should use the `Exec` function</span>
+    <span class="c1">// or change the handlers via `SetHandlers/AddHandler` functions.</span>
+    <span class="nx">SetCurrentRouteName</span><span class="p">(</span><span class="nx">currentRouteName</span> <span class="kt">string</span><span class="p">)</span>
+    <span class="c1">// GetCurrentRoute returns the current registered &quot;read-only&quot; route that</span>
+    <span class="c1">// was being registered to this request&#39;s path.</span>
+    <span class="nx">GetCurrentRoute</span><span class="p">()</span> <span class="nx">RouteReadOnly</span>
+
+    <span class="c1">// AddHandler can add handler(s)</span>
+    <span class="c1">// to the current request in serve-time,</span>
+    <span class="c1">// these handlers are not persistenced to the router.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Router is calling this function to add the route&#39;s handler.</span>
+    <span class="c1">// If AddHandler called then the handlers will be inserted</span>
+    <span class="c1">// to the end of the already-defined route&#39;s handler.</span>
+    <span class="c1">//</span>
+    <span class="nx">AddHandler</span><span class="p">(</span><span class="o">...</span><span class="nx">Handler</span><span class="p">)</span>
+    <span class="c1">// SetHandlers replaces all handlers with the new.</span>
+    <span class="nx">SetHandlers</span><span class="p">(</span><span class="nx">Handlers</span><span class="p">)</span>
+    <span class="c1">// Handlers keeps tracking of the current handlers.</span>
+    <span class="nx">Handlers</span><span class="p">()</span> <span class="nx">Handlers</span>
+
+    <span class="c1">// HandlerIndex sets the current index of the</span>
+    <span class="c1">// current context&#39;s handlers chain.</span>
+    <span class="c1">// If -1 passed then it just returns the</span>
+    <span class="c1">// current handler index without change the current index.rns that index, useless return value.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Look Handlers(), Next() and StopExecution() too.</span>
+    <span class="nx">HandlerIndex</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">currentIndex</span> <span class="kt">int</span><span class="p">)</span>
+    <span class="c1">// HandlerName returns the current handler&#39;s name, helpful for debugging.</span>
+    <span class="nx">HandlerName</span><span class="p">()</span> <span class="kt">string</span>
+    <span class="c1">// Next calls all the next handler from the handlers chain,</span>
+    <span class="c1">// it should be used inside a middleware.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Note: Custom context should override this method in order to be able to pass its own context.Context implementation.</span>
+    <span class="nx">Next</span><span class="p">()</span>
+    <span class="c1">// NextHandler returns(but it is NOT executes) the next handler from the handlers chain.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Use .Skip() to skip this handler if needed to execute the next of this returning handler.</span>
+    <span class="nx">NextHandler</span><span class="p">()</span> <span class="nx">Handler</span>
+    <span class="c1">// Skip skips/ignores the next handler from the handlers chain,</span>
+    <span class="c1">// it should be used inside a middleware.</span>
+    <span class="nx">Skip</span><span class="p">()</span>
+    <span class="c1">// StopExecution if called then the following .Next calls are ignored.</span>
+    <span class="nx">StopExecution</span><span class="p">()</span>
+    <span class="c1">// IsStopped checks and returns true if the current position of the Context is 255,</span>
+    <span class="c1">// means that the StopExecution() was called.</span>
+    <span class="nx">IsStopped</span><span class="p">()</span> <span class="kt">bool</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Current &quot;user/request&quot; storage                             |</span>
+    <span class="c1">//  | and share information between the handlers - Values().     |</span>
+    <span class="c1">//  | Save and get named path parameters - Params()              |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// Params returns the current url&#39;s named parameters key-value storage.</span>
+    <span class="c1">// Named path parameters are being saved here.</span>
+    <span class="c1">// This storage, as the whole Context, is per-request lifetime.</span>
+    <span class="nx">Params</span><span class="p">()</span> <span class="o">*</span><span class="nx">RequestParams</span>
+
+    <span class="c1">// Values returns the current &quot;user&quot; storage.</span>
+    <span class="c1">// Named path parameters and any optional data can be saved here.</span>
+    <span class="c1">// This storage, as the whole Context, is per-request lifetime.</span>
+    <span class="c1">//</span>
+    <span class="c1">// You can use this function to Set and Get local values</span>
+    <span class="c1">// that can be used to share information between handlers and middleware.</span>
+    <span class="nx">Values</span><span class="p">()</span> <span class="o">*</span><span class="nx">memstore</span><span class="p">.</span><span class="nx">Store</span>
+    <span class="c1">// Translate is the i18n (localization) middleware&#39;s function,</span>
+    <span class="c1">// it calls the Get(&quot;translate&quot;) to return the translated value.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Example: https://github.com/kataras/iris/tree/master/_examples/miscellaneous/i18n</span>
+    <span class="nx">Translate</span><span class="p">(</span><span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span> <span class="kt">string</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Path, Host, Subdomain, IP, Headers etc...                  |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// Method returns the request.Method, the client&#39;s http method to the server.</span>
+    <span class="nx">Method</span><span class="p">()</span> <span class="kt">string</span>
+    <span class="c1">// Path returns the full request path,</span>
+    <span class="c1">// escaped if EnablePathEscape config field is true.</span>
+    <span class="nx">Path</span><span class="p">()</span> <span class="kt">string</span>
+    <span class="c1">// RequestPath returns the full request path,</span>
+    <span class="c1">// based on the &#39;escape&#39;.</span>
+    <span class="nx">RequestPath</span><span class="p">(</span><span class="nx">escape</span> <span class="kt">bool</span><span class="p">)</span> <span class="kt">string</span>
+
+    <span class="c1">// Host returns the host part of the current url.</span>
+    <span class="nx">Host</span><span class="p">()</span> <span class="kt">string</span>
+    <span class="c1">// Subdomain returns the subdomain of this request, if any.</span>
+    <span class="c1">// Note that this is a fast method which does not cover all cases.</span>
+    <span class="nx">Subdomain</span><span class="p">()</span> <span class="p">(</span><span class="nx">subdomain</span> <span class="kt">string</span><span class="p">)</span>
+    <span class="c1">// RemoteAddr tries to parse and return the real client&#39;s request IP.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Based on allowed headers names that can be modified from Configuration.RemoteAddrHeaders.</span>
+    <span class="c1">//</span>
+    <span class="c1">// If parse based on these headers fail then it will return the Request&#39;s `RemoteAddr` field</span>
+    <span class="c1">// which is filled by the server before the HTTP handler.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Look `Configuration.RemoteAddrHeaders`,</span>
+    <span class="c1">//      `Configuration.WithRemoteAddrHeader(...)`,</span>
+    <span class="c1">//      `Configuration.WithoutRemoteAddrHeader(...)` for more.</span>
+    <span class="nx">RemoteAddr</span><span class="p">()</span> <span class="kt">string</span>
+    <span class="c1">// GetHeader returns the request header&#39;s value based on its name.</span>
+    <span class="nx">GetHeader</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span>
+    <span class="c1">// IsAjax returns true if this request is an &#39;ajax request&#39;( XMLHttpRequest)</span>
+    <span class="c1">//</span>
+    <span class="c1">// There is no a 100% way of knowing that a request was made via Ajax.</span>
+    <span class="c1">// You should never trust data coming from the client, they can be easily overcome by spoofing.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Note that &quot;X-Requested-With&quot; Header can be modified by any client(because of &quot;X-&quot;),</span>
+    <span class="c1">// so don&#39;t rely on IsAjax for really serious stuff,</span>
+    <span class="c1">// try to find another way of detecting the type(i.e, content type),</span>
+    <span class="c1">// there are many blogs that describe these problems and provide different kind of solutions,</span>
+    <span class="c1">// it&#39;s always depending on the application you&#39;re building,</span>
+    <span class="c1">// this is the reason why this ``IsAjax`` is simple enough for general purpose use.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Read more at: https://developer.mozilla.org/en-US/docs/AJAX</span>
+    <span class="c1">// and https://xhr.spec.whatwg.org/</span>
+    <span class="nx">IsAjax</span><span class="p">()</span> <span class="kt">bool</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Response Headers helpers                                   |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// Header adds a header to the response writer.</span>
+    <span class="nx">Header</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">value</span> <span class="kt">string</span><span class="p">)</span>
+
+    <span class="c1">// ContentType sets the response writer&#39;s header key &quot;Content-Type&quot; to the &#39;cType&#39;.</span>
+    <span class="nx">ContentType</span><span class="p">(</span><span class="nx">cType</span> <span class="kt">string</span><span class="p">)</span>
+    <span class="c1">// GetContentType returns the response writer&#39;s header value of &quot;Content-Type&quot;</span>
+    <span class="c1">// which may, setted before with the &#39;ContentType&#39;.</span>
+    <span class="nx">GetContentType</span><span class="p">()</span> <span class="kt">string</span>
+
+    <span class="c1">// StatusCode sets the status code header to the response.</span>
+    <span class="c1">// Look .GetStatusCode too.</span>
+    <span class="nx">StatusCode</span><span class="p">(</span><span class="nx">statusCode</span> <span class="kt">int</span><span class="p">)</span>
+    <span class="c1">// GetStatusCode returns the current status code of the response.</span>
+    <span class="c1">// Look StatusCode too.</span>
+    <span class="nx">GetStatusCode</span><span class="p">()</span> <span class="kt">int</span>
+
+    <span class="c1">// Redirect redirect sends a redirect response the client</span>
+    <span class="c1">// accepts 2 parameters string and an optional int</span>
+    <span class="c1">// first parameter is the url to redirect</span>
+    <span class="c1">// second parameter is the http status should send, default is 302 (StatusFound),</span>
+    <span class="c1">// you can set it to 301 (Permant redirect), if that&#39;s nessecery</span>
+    <span class="nx">Redirect</span><span class="p">(</span><span class="nx">urlToRedirect</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">statusHeader</span> <span class="o">...</span><span class="kt">int</span><span class="p">)</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Various Request and Post Data                              |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// URLParam returns the get parameter from a request , if any.</span>
+    <span class="nx">URLParam</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span>
+    <span class="c1">// URLParamInt returns the url query parameter as int value from a request,</span>
+    <span class="c1">// returns an error if parse failed.</span>
+    <span class="nx">URLParamInt</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// URLParamInt64 returns the url query parameter as int64 value from a request,</span>
+    <span class="c1">// returns an error if parse failed.</span>
+    <span class="nx">URLParamInt64</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// URLParams returns a map of GET query parameters separated by comma if more than one</span>
+    <span class="c1">// it returns an empty map if nothing found.</span>
+    <span class="nx">URLParams</span><span class="p">()</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span>
+
+    <span class="c1">// FormValue returns a single form value by its name/key</span>
+    <span class="nx">FormValue</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span>
+    <span class="c1">// FormValues returns all post data values with their keys</span>
+    <span class="c1">// form data, get, post &amp; put query arguments</span>
+    <span class="c1">//</span>
+    <span class="c1">// NOTE: A check for nil is necessary.</span>
+    <span class="nx">FormValues</span><span class="p">()</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">][]</span><span class="kt">string</span>
+    <span class="c1">// PostValue returns a form&#39;s only-post value by its name,</span>
+    <span class="c1">// same as Request.PostFormValue.</span>
+    <span class="nx">PostValue</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span>
+    <span class="c1">// FormFile returns the first file for the provided form key.</span>
+    <span class="c1">// FormFile calls ctx.Request.ParseMultipartForm and ParseForm if necessary.</span>
+    <span class="c1">//</span>
+    <span class="c1">// same as Request.FormFile.</span>
+    <span class="nx">FormFile</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">multipart</span><span class="p">.</span><span class="nx">File</span><span class="p">,</span> <span class="o">*</span><span class="nx">multipart</span><span class="p">.</span><span class="nx">FileHeader</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Custom HTTP Errors                                         |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// NotFound emits an error 404 to the client, using the specific custom error error handler.</span>
+    <span class="c1">// Note that you may need to call ctx.StopExecution() if you don&#39;t want the next handlers</span>
+    <span class="c1">// to be executed. Next handlers are being executed on iris because you can alt the</span>
+    <span class="c1">// error code and change it to a more specific one, i.e</span>
+    <span class="c1">// users := app.Party(&quot;/users&quot;)</span>
+    <span class="c1">// users.Done(func(ctx context.Context){ if ctx.StatusCode() == 400 { /*  custom error code for /users */ }})</span>
+    <span class="nx">NotFound</span><span class="p">()</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Body Readers                                               |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// SetMaxRequestBodySize sets a limit to the request body size</span>
+    <span class="c1">// should be called before reading the request body from the client.</span>
+    <span class="nx">SetMaxRequestBodySize</span><span class="p">(</span><span class="nx">limitOverBytes</span> <span class="kt">int64</span><span class="p">)</span>
+
+    <span class="c1">// UnmarshalBody reads the request&#39;s body and binds it to a value or pointer of any type</span>
+    <span class="c1">// Examples of usage: context.ReadJSON, context.ReadXML.</span>
+    <span class="nx">UnmarshalBody</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">unmarshaler</span> <span class="nx">Unmarshaler</span><span class="p">)</span> <span class="kt">error</span>
+    <span class="c1">// ReadJSON reads JSON from request&#39;s body and binds it to a value of any json-valid type.</span>
+    <span class="nx">ReadJSON</span><span class="p">(</span><span class="nx">jsonObject</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span>
+    <span class="c1">// ReadXML reads XML from request&#39;s body and binds it to a value of any xml-valid type.</span>
+    <span class="nx">ReadXML</span><span class="p">(</span><span class="nx">xmlObject</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span>
+    <span class="c1">// ReadForm binds the formObject  with the form data</span>
+    <span class="c1">// it supports any kind of struct.</span>
+    <span class="nx">ReadForm</span><span class="p">(</span><span class="nx">formObject</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Body (raw) Writers                                         |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// Write writes the data to the connection as part of an HTTP reply.</span>
+    <span class="c1">//</span>
+    <span class="c1">// If WriteHeader has not yet been called, Write calls</span>
+    <span class="c1">// WriteHeader(http.StatusOK) before writing the data. If the Header</span>
+    <span class="c1">// does not contain a Content-Type line, Write adds a Content-Type set</span>
+    <span class="c1">// to the result of passing the initial 512 bytes of written data to</span>
+    <span class="c1">// DetectContentType.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Depending on the HTTP protocol version and the client, calling</span>
+    <span class="c1">// Write or WriteHeader may prevent future reads on the</span>
+    <span class="c1">// Request.Body. For HTTP/1.x requests, handlers should read any</span>
+    <span class="c1">// needed request body data before writing the response. Once the</span>
+    <span class="c1">// headers have been flushed (due to either an explicit Flusher.Flush</span>
+    <span class="c1">// call or writing enough data to trigger a flush), the request body</span>
+    <span class="c1">// may be unavailable. For HTTP/2 requests, the Go HTTP server permits</span>
+    <span class="c1">// handlers to continue to read the request body while concurrently</span>
+    <span class="c1">// writing the response. However, such behavior may not be supported</span>
+    <span class="c1">// by all HTTP/2 clients. Handlers should read before writing if</span>
+    <span class="c1">// possible to maximize compatibility.</span>
+    <span class="nx">Write</span><span class="p">(</span><span class="nx">body</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// Writef formats according to a format specifier and writes to the response.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Returns the number of bytes written and any write error encountered.</span>
+    <span class="nx">Writef</span><span class="p">(</span><span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// WriteString writes a simple string to the response.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Returns the number of bytes written and any write error encountered.</span>
+    <span class="nx">WriteString</span><span class="p">(</span><span class="nx">body</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// WriteWithExpiration like Write but it sends with an expiration datetime</span>
+    <span class="c1">// which is refreshed every package-level `StaticCacheDuration` field.</span>
+    <span class="nx">WriteWithExpiration</span><span class="p">(</span><span class="nx">body</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">modtime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// StreamWriter registers the given stream writer for populating</span>
+    <span class="c1">// response body.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Access to context&#39;s and/or its&#39; members is forbidden from writer.</span>
+    <span class="c1">//</span>
+    <span class="c1">// This function may be used in the following cases:</span>
+    <span class="c1">//</span>
+    <span class="c1">//     * if response body is too big (more than iris.LimitRequestBodySize(if setted)).</span>
+    <span class="c1">//     * if response body is streamed from slow external sources.</span>
+    <span class="c1">//     * if response body must be streamed to the client in chunks.</span>
+    <span class="c1">//     (aka `http server push`).</span>
+    <span class="c1">//</span>
+    <span class="c1">// receives a function which receives the response writer</span>
+    <span class="c1">// and returns false when it should stop writing, otherwise true in order to continue</span>
+    <span class="nx">StreamWriter</span><span class="p">(</span><span class="nx">writer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Writer</span><span class="p">)</span> <span class="kt">bool</span><span class="p">)</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Body Writers with compression                              |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">// ClientSupportsGzip retruns true if the client supports gzip compression.</span>
+    <span class="nx">ClientSupportsGzip</span><span class="p">()</span> <span class="kt">bool</span>
+    <span class="c1">// WriteGzip accepts bytes, which are compressed to gzip format and sent to the client.</span>
+    <span class="c1">// returns the number of bytes written and an error ( if the client doesn&#39; supports gzip compression)</span>
+    <span class="c1">//</span>
+    <span class="c1">// This function writes temporary gzip contents, the ResponseWriter is untouched.</span>
+    <span class="nx">WriteGzip</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// TryWriteGzip accepts bytes, which are compressed to gzip format and sent to the client.</span>
+    <span class="c1">// If client does not supprots gzip then the contents are written as they are, uncompressed.</span>
+    <span class="c1">//</span>
+    <span class="c1">// This function writes temporary gzip contents, the ResponseWriter is untouched.</span>
+    <span class="nx">TryWriteGzip</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// GzipResponseWriter converts the current response writer into a response writer</span>
+    <span class="c1">// which when its .Write called it compress the data to gzip and writes them to the client.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Can be also disabled with its .Disable and .ResetBody to rollback to the usual response writer.</span>
+    <span class="nx">GzipResponseWriter</span><span class="p">()</span> <span class="o">*</span><span class="nx">GzipResponseWriter</span>
+    <span class="c1">// Gzip enables or disables (if enabled before) the gzip response writer,if the client</span>
+    <span class="c1">// supports gzip compression, so the following response data will</span>
+    <span class="c1">// be sent as compressed gzip data to the client.</span>
+    <span class="nx">Gzip</span><span class="p">(</span><span class="nx">enable</span> <span class="kt">bool</span><span class="p">)</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Rich Body Content Writers/Renderers                        |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// ViewLayout sets the &quot;layout&quot; option if and when .View</span>
+    <span class="c1">// is being called afterwards, in the same request.</span>
+    <span class="c1">// Useful when need to set or/and change a layout based on the previous handlers in the chain.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Note that the &#39;layoutTmplFile&#39; argument can be setted to iris.NoLayout || view.NoLayout</span>
+    <span class="c1">// to disable the layout for a specific view render action,</span>
+    <span class="c1">// it disables the engine&#39;s configuration&#39;s layout property.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Look .ViewData and .View too.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Example: https://github.com/kataras/iris/tree/master/_examples/view/context-view-data/</span>
+    <span class="nx">ViewLayout</span><span class="p">(</span><span class="nx">layoutTmplFile</span> <span class="kt">string</span><span class="p">)</span>
+
+    <span class="c1">// ViewData saves one or more key-value pair in order to be passed if and when .View</span>
+    <span class="c1">// is being called afterwards, in the same request.</span>
+    <span class="c1">// Useful when need to set or/and change template data from previous hanadlers in the chain.</span>
+    <span class="c1">//</span>
+    <span class="c1">// If .View&#39;s &quot;binding&quot; argument is not nil and it&#39;s not a type of map</span>
+    <span class="c1">// then these data are being ignored, binding has the priority, so the main route&#39;s handler can still decide.</span>
+    <span class="c1">// If binding is a map or context.Map then these data are being added to the view data</span>
+    <span class="c1">// and passed to the template.</span>
+    <span class="c1">//</span>
+    <span class="c1">// After .View, the data are not destroyed, in order to be re-used if needed (again, in the same request as everything else),</span>
+    <span class="c1">// to clear the view data, developers can call:</span>
+    <span class="c1">// ctx.Set(ctx.Application().ConfigurationReadOnly().GetViewDataContextKey(), nil)</span>
+    <span class="c1">//</span>
+    <span class="c1">// If &#39;key&#39; is empty then the value is added as it&#39;s (struct or map) and developer is unable to add other value.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Look .ViewLayout and .View too.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Example: https://github.com/kataras/iris/tree/master/_examples/view/context-view-data/</span>
+    <span class="nx">ViewData</span><span class="p">(</span><span class="nx">key</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">value</span> <span class="kd">interface</span><span class="p">{})</span>
+
+    <span class="c1">// GetViewData returns the values registered by `context#ViewData`.</span>
+    <span class="c1">// The return value is `map[string]interface{}`, this means that</span>
+    <span class="c1">// if a custom struct registered to ViewData then this function</span>
+    <span class="c1">// will try to parse it to map, if failed then the return value is nil</span>
+    <span class="c1">// A check for nil is always a good practise if different</span>
+    <span class="c1">// kind of values or no data are registered via `ViewData`.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Similarly to `viewData := ctx.Values().Get(&quot;iris.viewData&quot;)` or</span>
+    <span class="c1">// `viewData := ctx.Values().Get(ctx.Application().ConfigurationReadOnly().GetViewDataContextKey())`.</span>
+    <span class="nx">GetViewData</span><span class="p">()</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}</span>
+
+    <span class="c1">// View renders templates based on the adapted view engines.</span>
+    <span class="c1">// First argument accepts the filename, relative to the view engine&#39;s Directory,</span>
+    <span class="c1">// i.e: if directory is &quot;./templates&quot; and want to render the &quot;./templates/users/index.html&quot;</span>
+    <span class="c1">// then you pass the &quot;users/index.html&quot; as the filename argument.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Look: .ViewData and .ViewLayout too.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Examples: https://github.com/kataras/iris/tree/master/_examples/view/</span>
+    <span class="nx">View</span><span class="p">(</span><span class="nx">filename</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span>
+
+    <span class="c1">// Binary writes out the raw bytes as binary data.</span>
+    <span class="nx">Binary</span><span class="p">(</span><span class="nx">data</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// Text writes out a string as plain text.</span>
+    <span class="nx">Text</span><span class="p">(</span><span class="nx">text</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// HTML writes out a string as text/html.</span>
+    <span class="nx">HTML</span><span class="p">(</span><span class="nx">htmlContents</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// JSON marshals the given interface object and writes the JSON response.</span>
+    <span class="nx">JSON</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">options</span> <span class="o">...</span><span class="nx">JSON</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// JSONP marshals the given interface object and writes the JSON response.</span>
+    <span class="nx">JSONP</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">options</span> <span class="o">...</span><span class="nx">JSONP</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// XML marshals the given interface object and writes the XML response.</span>
+    <span class="nx">XML</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">options</span> <span class="o">...</span><span class="nx">XML</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="c1">// Markdown parses the markdown to html and renders to client.</span>
+    <span class="nx">Markdown</span><span class="p">(</span><span class="nx">markdownB</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">options</span> <span class="o">...</span><span class="nx">Markdown</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Serve files                                                |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// ServeContent serves content, headers are autoset</span>
+    <span class="c1">// receives three parameters, it&#39;s low-level function, instead you can use .ServeFile(string,bool)/SendFile(string,string)</span>
+    <span class="c1">//</span>
+    <span class="c1">// You can define your own &quot;Content-Type&quot; header also, after this function call</span>
+    <span class="c1">// Doesn&#39;t implements resuming (by range), use ctx.SendFile instead</span>
+    <span class="nx">ServeContent</span><span class="p">(</span><span class="nx">content</span> <span class="nx">io</span><span class="p">.</span><span class="nx">ReadSeeker</span><span class="p">,</span> <span class="nx">filename</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">modtime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span><span class="p">,</span> <span class="nx">gzipCompression</span> <span class="kt">bool</span><span class="p">)</span> <span class="kt">error</span>
+    <span class="c1">// ServeFile serves a view file, to send a file ( zip for example) to the client you should use the SendFile(serverfilename,clientfilename)</span>
+    <span class="c1">// receives two parameters</span>
+    <span class="c1">// filename/path (string)</span>
+    <span class="c1">// gzipCompression (bool)</span>
+    <span class="c1">//</span>
+    <span class="c1">// You can define your own &quot;Content-Type&quot; header also, after this function call</span>
+    <span class="c1">// This function doesn&#39;t implement resuming (by range), use ctx.SendFile instead</span>
+    <span class="c1">//</span>
+    <span class="c1">// Use it when you want to serve css/js/... files to the client, for bigger files and &#39;force-download&#39; use the SendFile.</span>
+    <span class="nx">ServeFile</span><span class="p">(</span><span class="nx">filename</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">gzipCompression</span> <span class="kt">bool</span><span class="p">)</span> <span class="kt">error</span>
+    <span class="c1">// SendFile sends file for force-download to the client</span>
+    <span class="c1">//</span>
+    <span class="c1">// Use this instead of ServeFile to &#39;force-download&#39; bigger files to the client.</span>
+    <span class="nx">SendFile</span><span class="p">(</span><span class="nx">filename</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">destinationName</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Cookies                                                    |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// SetCookie adds a cookie</span>
+    <span class="nx">SetCookie</span><span class="p">(</span><span class="nx">cookie</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Cookie</span><span class="p">)</span>
+    <span class="c1">// SetCookieKV adds a cookie, receives just a name(string) and a value(string)</span>
+    <span class="c1">//</span>
+    <span class="c1">// If you use this method, it expires at 2 hours</span>
+    <span class="c1">// use ctx.SetCookie or http.SetCookie if you want to change more fields.</span>
+    <span class="nx">SetCookieKV</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">value</span> <span class="kt">string</span><span class="p">)</span>
+    <span class="c1">// GetCookie returns cookie&#39;s value by it&#39;s name</span>
+    <span class="c1">// returns empty string if nothing was found.</span>
+    <span class="nx">GetCookie</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span>
+    <span class="c1">// RemoveCookie deletes a cookie by it&#39;s name.</span>
+    <span class="nx">RemoveCookie</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span>
+    <span class="c1">// VisitAllCookies takes a visitor which loops</span>
+    <span class="c1">// on each (request&#39;s) cookies&#39; name and value.</span>
+    <span class="nx">VisitAllCookies</span><span class="p">(</span><span class="nx">visitor</span> <span class="kd">func</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">value</span> <span class="kt">string</span><span class="p">))</span>
+
+    <span class="c1">// MaxAge returns the &quot;cache-control&quot; request header&#39;s value</span>
+    <span class="c1">// seconds as int64</span>
+    <span class="c1">// if header not found or parse failed then it returns -1.</span>
+    <span class="nx">MaxAge</span><span class="p">()</span> <span class="kt">int64</span>
+
+    <span class="c1">//  +------------------------------------------------------------+</span>
+    <span class="c1">//  | Advanced: Response Recorder and Transactions               |</span>
+    <span class="c1">//  +------------------------------------------------------------+</span>
+
+    <span class="c1">// Record transforms the context&#39;s basic and direct responseWriter to a ResponseRecorder</span>
+    <span class="c1">// which can be used to reset the body, reset headers, get the body,</span>
+    <span class="c1">// get &amp; set the status code at any time and more.</span>
+    <span class="nx">Record</span><span class="p">()</span>
+    <span class="c1">// Recorder returns the context&#39;s ResponseRecorder</span>
+    <span class="c1">// if not recording then it starts recording and returns the new context&#39;s ResponseRecorder</span>
+    <span class="nx">Recorder</span><span class="p">()</span> <span class="o">*</span><span class="nx">ResponseRecorder</span>
+    <span class="c1">// IsRecording returns the response recorder and a true value</span>
+    <span class="c1">// when the response writer is recording the status code, body, headers and so on,</span>
+    <span class="c1">// else returns nil and false.</span>
+    <span class="nx">IsRecording</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><span class="nx">ResponseRecorder</span><span class="p">,</span> <span class="kt">bool</span><span class="p">)</span>
+
+    <span class="c1">// BeginTransaction starts a scoped transaction.</span>
+    <span class="c1">//</span>
+    <span class="c1">// You can search third-party articles or books on how Business Transaction works (it&#39;s quite simple, especially here).</span>
+    <span class="c1">//</span>
+    <span class="c1">// Note that this is unique and new</span>
+    <span class="c1">// (=I haver never seen any other examples or code in Golang on this subject, so far, as with the most of iris features...)</span>
+    <span class="c1">// it&#39;s not covers all paths,</span>
+    <span class="c1">// such as databases, this should be managed by the libraries you use to make your database connection,</span>
+    <span class="c1">// this transaction scope is only for context&#39;s response.</span>
+    <span class="c1">// Transactions have their own middleware ecosystem also, look iris.go:UseTransaction.</span>
+    <span class="c1">//</span>
+    <span class="c1">// See https://github.com/kataras/iris/tree/master/_examples/ for more</span>
+    <span class="nx">BeginTransaction</span><span class="p">(</span><span class="nx">pipe</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">Transaction</span><span class="p">))</span>
+    <span class="c1">// SkipTransactions if called then skip the rest of the transactions</span>
+    <span class="c1">// or all of them if called before the first transaction</span>
+    <span class="nx">SkipTransactions</span><span class="p">()</span>
+    <span class="c1">// TransactionsSkipped returns true if the transactions skipped or canceled at all.</span>
+    <span class="nx">TransactionsSkipped</span><span class="p">()</span> <span class="kt">bool</span>
+
+    <span class="c1">// Exec calls the framewrok&#39;s ServeCtx</span>
+    <span class="c1">// based on this context but with a changed method and path</span>
+    <span class="c1">// like it was requested by the user, but it is not.</span>
+    <span class="c1">//</span>
+    <span class="c1">// Offline means that the route is registered to the iris and have all features that a normal route has</span>
+    <span class="c1">// BUT it isn&#39;t available by browsing, its handlers executed only when other handler&#39;s context call them</span>
+    <span class="c1">// it can validate paths, has sessions, path parameters and all.</span>
+    <span class="c1">//</span>
+    <span class="c1">// You can find the Route by app.GetRoute(&quot;theRouteName&quot;)</span>
+    <span class="c1">// you can set a route name as: myRoute := app.Get(&quot;/mypath&quot;, handler)(&quot;theRouteName&quot;)</span>
+    <span class="c1">// that will set a name to the route and returns its RouteInfo instance for further usage.</span>
+    <span class="c1">//</span>
+    <span class="c1">// It doesn&#39;t changes the global state, if a route was &quot;offline&quot; it remains offline.</span>
+    <span class="c1">//</span>
+    <span class="c1">// app.None(...) and app.GetRoutes().Offline(route)/.Online(route, method)</span>
+    <span class="c1">//</span>
+    <span class="c1">// Example: https://github.com/kataras/iris/tree/master/_examples/routing/route-state</span>
+    <span class="c1">//</span>
+    <span class="c1">// User can get the response by simple using rec := ctx.Recorder(); rec.Body()/rec.StatusCode()/rec.Header().</span>
+    <span class="c1">//</span>
+    <span class="c1">// Context&#39;s Values and the Session are kept in order to be able to communicate via the result route.</span>
+    <span class="c1">//</span>
+    <span class="c1">// It&#39;s for extreme use cases, 99% of the times will never be useful for you.</span>
+    <span class="nx">Exec</span><span class="p">(</span><span class="nx">method</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">path</span> <span class="kt">string</span><span class="p">)</span>
+
+    <span class="c1">// Application returns the iris app instance which belongs to this context.</span>
+    <span class="c1">// Worth to notice that this function returns an interface</span>
+    <span class="c1">// of the Application, which contains methods that are safe</span>
+    <span class="c1">// to be executed at serve-time. The full app&#39;s fields</span>
+    <span class="c1">// and methods are not available here for the developer&#39;s safety.</span>
+    <span class="nx">Application</span><span class="p">()</span> <span class="nx">Application</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples">examples</a> will give you the direction.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="path-parameters">
+<span id="path-parameters"></span><h2>Path Parameters<a class="headerlink" href="#path-parameters" title="永久链接至标题">¶</a></h2>
+<p><strong>Dynamic Path Parameters</strong></p>
+<p>Iris拥有您遇到过的最简单，最强大的路由进程。</p>
+<p>与此同时，Iris有自己的interpeter（是一种编程语言），用于路由的路径语法及其动态路径参数解析和评估。我们称它们为“macros”用于快捷方式。</p>
+<p>怎么样？它计算了它的需求，如果不需要任何特殊的正则表达式，那么它只是用低级路径语法注册路由，
+否则它预先编译正则表达式并添加必要的中间件。这意味着与其他路由器或Web框架相比，您的性能成本为零。</p>
+<p>标准 macro types 路由路径参数</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="o">+------------------------+</span>
+<span class="p">|</span> <span class="p">{</span><span class="nx">param</span><span class="p">:</span><span class="kt">string</span><span class="p">}</span>         <span class="p">|</span>
+<span class="o">+------------------------+</span>
+<span class="kt">string</span> <span class="kd">type</span>
+<span class="nx">anything</span>
+
+<span class="o">+------------------------+</span>
+<span class="p">|</span> <span class="p">{</span><span class="nx">param</span><span class="p">:</span><span class="kt">int</span><span class="p">}</span>            <span class="p">|</span>
+<span class="o">+------------------------+</span>
+<span class="kt">int</span> <span class="kd">type</span>
+<span class="nx">only</span> <span class="nx">numbers</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="o">+------------------------+</span>
+<span class="p">|</span> <span class="p">{</span><span class="nx">param</span><span class="p">:</span><span class="nx">long</span><span class="p">}</span>           <span class="p">|</span>
+<span class="o">+------------------------+</span>
+<span class="kt">int64</span> <span class="kd">type</span>
+<span class="nx">only</span> <span class="nx">numbers</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="o">+------------------------+</span>
+<span class="p">|</span> <span class="p">{</span><span class="nx">param</span><span class="p">:</span><span class="nx">boolean</span><span class="p">}</span>        <span class="p">|</span>
+<span class="o">+------------------------+</span>
+<span class="kt">bool</span> <span class="kd">type</span>
+<span class="nx">only</span> <span class="s">&quot;1&quot;</span> <span class="nx">or</span> <span class="s">&quot;t&quot;</span> <span class="nx">or</span> <span class="s">&quot;T&quot;</span> <span class="nx">or</span> <span class="s">&quot;TRUE&quot;</span> <span class="nx">or</span> <span class="s">&quot;true&quot;</span> <span class="nx">or</span> <span class="s">&quot;True&quot;</span>
+<span class="nx">or</span> <span class="s">&quot;0&quot;</span> <span class="nx">or</span> <span class="s">&quot;f&quot;</span> <span class="nx">or</span> <span class="s">&quot;F&quot;</span> <span class="nx">or</span> <span class="s">&quot;FALSE&quot;</span> <span class="nx">or</span> <span class="s">&quot;false&quot;</span> <span class="nx">or</span> <span class="s">&quot;False&quot;</span>
+
+<span class="o">+------------------------+</span>
+<span class="p">|</span> <span class="p">{</span><span class="nx">param</span><span class="p">:</span><span class="nx">alphabetical</span><span class="p">}</span>   <span class="p">|</span>
+<span class="o">+------------------------+</span>
+<span class="nx">alphabetical</span><span class="o">/</span><span class="nx">letter</span> <span class="kd">type</span>
+<span class="nx">letters</span> <span class="nx">only</span> <span class="p">(</span><span class="nx">upper</span> <span class="nx">or</span> <span class="nx">lowercase</span><span class="p">)</span>
+
+<span class="o">+------------------------+</span>
+<span class="p">|</span> <span class="p">{</span><span class="nx">param</span><span class="p">:</span><span class="nx">file</span><span class="p">}</span>           <span class="p">|</span>
+<span class="o">+------------------------+</span>
+<span class="nx">file</span> <span class="kd">type</span>
+<span class="nx">letters</span> <span class="p">(</span><span class="nx">upper</span> <span class="nx">or</span> <span class="nx">lowercase</span><span class="p">)</span>
+<span class="nx">numbers</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
+<span class="nx">underscore</span> <span class="p">(</span><span class="nx">_</span><span class="p">)</span>
+<span class="nx">dash</span> <span class="p">(</span><span class="o">-</span><span class="p">)</span>
+<span class="nx">point</span> <span class="p">(.)</span>
+<span class="nx">no</span> <span class="nx">spaces</span> <span class="p">!</span> <span class="nx">or</span> <span class="nx">other</span> <span class="nx">character</span>
+
+<span class="o">+------------------------+</span>
+<span class="p">|</span> <span class="p">{</span><span class="nx">param</span><span class="p">:</span><span class="nx">path</span><span class="p">}</span>           <span class="p">|</span>
+<span class="o">+------------------------+</span>
+<span class="nx">path</span> <span class="kd">type</span>
+<span class="nx">anything</span><span class="p">,</span> <span class="nx">should</span> <span class="nx">be</span> <span class="nx">the</span> <span class="nx">last</span> <span class="nx">part</span><span class="p">,</span> <span class="nx">more</span> <span class="nx">than</span> <span class="nx">one</span> <span class="nx">path</span> <span class="nx">segment</span><span class="p">,</span>
+<span class="nx">i</span><span class="p">.</span><span class="nx">e</span><span class="p">:</span> <span class="o">/</span><span class="nx">path1</span><span class="o">/</span><span class="nx">path2</span><span class="o">/</span><span class="nx">path3</span> <span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;param&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;/path1/path2/path3&quot;</span>
+</pre></div>
+</div>
+<p>如果缺少类型，则参数的类型默认为字符串, <code class="docutils literal notranslate"><span class="pre">{param}</span> <span class="pre">==</span> <span class="pre">{param:string}</span></code></p>
+<p>如果在该类型上找不到函数，则使用 <code class="docutils literal notranslate"><span class="pre">string</span></code> macro 类型的函数。</p>
+<p>除了 iris 提供基本类型和一些默认的“macro funcs”，你也可以自己注册！</p>
+<p>注册命名路径参数函数</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span><span class="p">.</span><span class="nx">Macros</span><span class="p">().</span><span class="nx">Int</span><span class="p">.</span><span class="nx">RegisterFunc</span><span class="p">(</span><span class="s">&quot;min&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">argument</span> <span class="kt">int</span><span class="p">)</span> <span class="kd">func</span><span class="p">(</span><span class="nx">paramValue</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="c1">// [...]</span>
+    <span class="k">return</span> <span class="kc">true</span> 
+    <span class="c1">// -&gt; true means valid, false means invalid fire 404 or if &quot;else 500&quot; is appended to the macro syntax then internal server error.</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">func(argument</span> <span class="pre">...)</span></code> 你可以有任何标准类型, 它将在服务器启动之前进行验证，
+因此不关心那里的任何性能成本，它在服务运行时的唯一事情是返回 <code class="docutils literal notranslate"><span class="pre">func(paramValue</span> <span class="pre">string)</span> <span class="pre">bool.</span></code></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nx">param</span><span class="p">:</span><span class="kt">string</span> <span class="nx">equal</span><span class="p">(</span><span class="nx">iris</span><span class="p">)}</span> <span class="p">,</span> <span class="s">&quot;iris&quot;</span> <span class="nx">will</span> <span class="nx">be</span> <span class="nx">the</span> <span class="nx">argument</span> <span class="nx">here</span><span class="p">:</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Macros</span><span class="p">().</span><span class="nx">String</span><span class="p">.</span><span class="nx">RegisterFunc</span><span class="p">(</span><span class="s">&quot;equal&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">argument</span> <span class="kt">string</span><span class="p">)</span> <span class="kd">func</span><span class="p">(</span><span class="nx">paramValue</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">paramValue</span> <span class="kt">string</span><span class="p">){</span> <span class="k">return</span> <span class="nx">argument</span> <span class="o">==</span> <span class="nx">paramValue</span> <span class="p">}</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>Example Code:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+<span class="c1">// you can use the &quot;string&quot; type which is valid for a single path parameter that can be anything.</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/username/{name}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;Hello %s&quot;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">))</span>
+<span class="p">})</span> <span class="c1">// type is missing = {name:string}</span>
+
+<span class="c1">// Let&#39;s register our first macro attached to int macro type.</span>
+<span class="c1">// &quot;min&quot; = the function</span>
+<span class="c1">// &quot;minValue&quot; = the argument of the function</span>
+<span class="c1">// func(string) bool = the macro&#39;s path parameter evaluator, this executes in serve time when</span>
+<span class="c1">// a user requests a path which contains the :int macro type with the min(...) macro parameter function.</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Macros</span><span class="p">().</span><span class="nx">Int</span><span class="p">.</span><span class="nx">RegisterFunc</span><span class="p">(</span><span class="s">&quot;min&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">minValue</span> <span class="kt">int</span><span class="p">)</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="c1">// do anything before serve here [...]</span>
+    <span class="c1">// at this case we don&#39;t need to do anything</span>
+    <span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">paramValue</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="nx">n</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">strconv</span><span class="p">.</span><span class="nx">Atoi</span><span class="p">(</span><span class="nx">paramValue</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">n</span> <span class="o">&gt;=</span> <span class="nx">minValue</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="c1">// http://localhost:8080/profile/id&gt;=1</span>
+<span class="c1">// this will throw 404 even if it&#39;s found as route on : /profile/0, /profile/blabla, /profile/-1</span>
+<span class="c1">// macro parameter functions are optional of course.</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/profile/{id:int min(1)}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// second parameter is the error but it will always nil because we use macros,</span>
+    <span class="c1">// the validaton already happened.</span>
+    <span class="nx">id</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">GetInt</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;Hello id: %d&quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="c1">// to change the error code per route&#39;s macro evaluator:</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/profile/{id:int min(1)}/friends/{friendid:int min(1) else 504}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">id</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">GetInt</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)</span>
+    <span class="nx">friendid</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">GetInt</span><span class="p">(</span><span class="s">&quot;friendid&quot;</span><span class="p">)</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;Hello id: %d looking for friend id: &quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">friendid</span><span class="p">)</span>
+<span class="p">})</span> <span class="c1">// this will throw e 504 error code instead of 404 if all route&#39;s macros not passed.</span>
+
+<span class="c1">// http://localhost:8080/game/a-zA-Z/level/0-9</span>
+<span class="c1">// remember, alphabetical is lowercase or uppercase letters only.</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/game/{name:alphabetical}/level/{level:int}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;name: %s | level: %s&quot;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">),</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;level&quot;</span><span class="p">))</span>
+<span class="p">})</span>
+
+<span class="c1">// let&#39;s use a trivial custom regexp that validates a single path parameter</span>
+<span class="c1">// which its value is only lowercase letters.</span>
+
+<span class="c1">// http://localhost:8080/lowercase/anylowercase</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/lowercase/{name:string regexp(^[a-z]+)}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;name should be only lowercase, otherwise this handler will never executed: %s&quot;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">))</span>
+<span class="p">})</span>
+
+<span class="c1">// http://localhost:8080/single_file/app.js</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/single_file/{myfile:file}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;file type validates if the parameter value has a form of a file name, got: %s&quot;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;myfile&quot;</span><span class="p">))</span>
+<span class="p">})</span>
+
+<span class="c1">// http://localhost:8080/myfiles/any/directory/here/</span>
+<span class="c1">// this is the only macro type that accepts any number of path segments.</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/myfiles/{directory:path}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;path type accepts any number of path segments, path after /myfiles/ is: %s&quot;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;directory&quot;</span><span class="p">))</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>路径参数名称应仅包含字母。不允许使用“_”和数字等符号。</p>
+<p>最后，不要将 <code class="docutils literal notranslate"><span class="pre">ctx.Params()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ctx.Values()</span></code> 混淆，
+Path parameter’s values goes to ctx.Params() and context’s local storage that can be used to communicate between handlers and middleware(s) goes to ctx.Values().</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="reverse-routes">
+<span id="reverse-routes"></span><h2>Reverse routes<a class="headerlink" href="#reverse-routes" title="永久链接至标题">¶</a></h2>
+<p><strong>路由与反向查找</strong></p>
+<p>正如前面章节所提到的 Handlers，Iris提供一些handler祖册方法并返回一个 <a class="reference external" href="https://godoc.org/github.com/kataras/iris/core/router#Route"><code class="docutils literal notranslate"><span class="pre">Route</span></code></a> 实例</p>
+<p><strong>路由命名</strong></p>
+<p>路由命名很简单，我们只需要掉用 <code class="docutils literal notranslate"><span class="pre">Name</span></code> 字段定义其名称并返回 <code class="docutils literal notranslate"><span class="pre">*Route</span></code></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="nx">h</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">cxt</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;b&gt;Hi&lt;/b1&gt;&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">home</span> <span class="o">:=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">h</span><span class="p">)</span>
+
+    <span class="nx">home</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="s">&quot;home&quot;</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/about&quot;</span><span class="p">,</span> <span class="nx">h</span><span class="p">).</span><span class="nx">Name</span> <span class="p">=</span> <span class="s">&quot;about&quot;</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/page/{id}&quot;</span><span class="p">,</span> <span class="nx">h</span><span class="p">).</span><span class="nx">Name</span> <span class="p">=</span> <span class="s">&quot;page&quot;</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>路由反查 AKA 从路由名称生成URLs</strong></p>
+<p>当我们为特定 path 注册 handlers 时，我们能够根据传递给Iris的结构化数据创建URL。
+在上面的例子中，我们命名了三个路由，其中一个甚至带参数，如果我们使用的时默认<code class="docutils literal notranslate"><span class="pre">html/template</span></code> 视图引擎，
+我们可以使用一个简单的操作来反查路由（并生成实际的URL）</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">Home</span><span class="p">:</span> <span class="p">{{</span> <span class="nx">urlpath</span> <span class="s">&quot;home&quot;</span> <span class="p">}}</span>
+<span class="nx">About</span><span class="p">:</span> <span class="p">{{</span> <span class="nx">urlpath</span> <span class="s">&quot;about&quot;</span> <span class="p">}}</span>
+<span class="nx">Page</span> <span class="mi">17</span><span class="p">:</span> <span class="p">{{</span> <span class="nx">urlpath</span> <span class="s">&quot;page&quot;</span> <span class="s">&quot;17&quot;</span> <span class="p">}}</span>
+</pre></div>
+</div>
+<p>上面的代码将生成以下输出：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">Home</span><span class="p">:</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:8080/ </span>
+<span class="nx">About</span><span class="p">:</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:8080/about</span>
+<span class="nx">Page</span> <span class="mi">17</span><span class="p">:</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:8080/page/17</span>
+</pre></div>
+</div>
+<p><strong>在代码中使用路由名称</strong></p>
+<p>我们可以使用以下 function/methods 来处理命名的路由（及路由参数）</p>
+<ul class="simple">
+<li><a class="reference external" href="https://godoc.org/github.com/kataras/iris/core/router#APIBuilder.GetRoutes"><code class="docutils literal notranslate"><span class="pre">GetRoutes</span></code></a>函数获取所有的注册路由</li>
+<li><a class="reference external" href="https://godoc.org/github.com/kataras/iris/core/router#APIBuilder.GetRoute"><code class="docutils literal notranslate"><span class="pre">GetRoute(routeName</span> <span class="pre">string)</span></code></a>方法按名称检索路由</li>
+<li><a class="reference external" href="https://godoc.org/github.com/kataras/iris/core/router#RoutePathReverser.URL"><code class="docutils literal notranslate"><span class="pre">URL(routeName</span> <span class="pre">string,</span> <span class="pre">paramValues</span> <span class="pre">...interface{})</span></code></a>方法根据提供的参数生成url字符串</li>
+<li><a class="reference external" href="https://godoc.org/github.com/kataras/iris/core/router#RoutePathReverser.Path"><code class="docutils literal notranslate"><span class="pre">Path(routeName</span> <span class="pre">string,</span> <span class="pre">paramValues</span> <span class="pre">...interface{}</span></code></a>方法，根据提供的值生成部份URL（没有主机和协议）</li>
+</ul>
+<p><strong>栗子</strong></p>
+<p>有关详情请移步<a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/view/template_html_4">kataras/iris/_examples/view/template_html_4</a></p>
+</div>
+<hr class="docutils" />
+<div class="section" id="middleware">
+<span id="middleware"></span><h2>Middleware<a class="headerlink" href="#middleware" title="永久链接至标题">¶</a></h2>
+<p>当我们在Iris中讨论中间件时，我们讨论的是HTTP求情生命周期中，代码运行之前或之后。
+例如，日志记录中间件可能会将传入的请求详细信息写入日志，然后调用 handler code，
+在编写有关日志响应的详细信息之前，关于中间件的一个很酷的事情是这些单元非常灵活和可重用。</p>
+<p>中间件只是Handler的一种形式 <code class="docutils literal notranslate"><span class="pre">func(ctx</span> <span class="pre">iris.Context)</span></code>，当调用 <code class="docutils literal notranslate"><span class="pre">ctx.Next()</span></code> 的时候中间件正在运行，这可以用于登录验证，
+假如用户已经登录执行 <code class="docutils literal notranslate"><span class="pre">ctx.Next()</span></code>, 否则响应相关错误返回。</p>
+<p><strong>编写中间件</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">mian</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">mian</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">before</span><span class="p">,</span> <span class="nx">mainHandler</span><span class="p">,</span> <span class="nx">after</span><span class="p">)</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">before</span><span class="p">(</span><span class="nx">cxt</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">shareInformation</span> <span class="o">:=</span> <span class="s">&quot;this is a sharable information between handlers&quot;</span>
+
+    <span class="nx">requestPath</span> <span class="o">:=</span> <span class="nx">cxt</span><span class="p">.</span><span class="nx">Path</span><span class="p">()</span>
+
+    <span class="nb">println</span><span class="p">(</span><span class="s">&quot;Before the mainHandler: &quot;</span> <span class="o">+</span> <span class="nx">requestPath</span><span class="p">)</span>
+
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Values</span><span class="p">().</span><span class="nx">GetString</span><span class="p">(</span><span class="s">&quot;info&quot;</span><span class="p">)</span>
+
+    <span class="c1">// 执行下一个处理程序</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Next</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">after</span><span class="p">(</span><span class="nx">cxt</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">println</span><span class="p">(</span><span class="s">&quot;After the mainHandler&quot;</span><span class="p">)</span>    
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">mainHandler</span><span class="p">(</span><span class="nx">cxt</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">println</span><span class="p">(</span><span class="s">&quot;Inside mainHandler&quot;</span><span class="p">)</span>
+
+    <span class="c1">// 在 &#39;before&#39; 处理之前得到 info</span>
+    <span class="nx">info</span> <span class="o">:=</span> <span class="nx">cxt</span><span class="p">.</span><span class="nx">Values</span><span class="p">().</span><span class="nx">GetString</span><span class="p">(</span><span class="s">&quot;info&quot;</span><span class="p">)</span>
+
+    <span class="nx">cxt</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;h1&gt;Response&lt;/h1&gt;&quot;</span><span class="p">)</span>
+    <span class="nx">cxt</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;br/&gt; Info: &quot;</span> <span class="o">+</span> <span class="nx">info</span><span class="p">)</span>
+
+    <span class="c1">// 执行 &#39;after&#39;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Next</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ go run main.go # and navigate to the http://localhost:8080
+Now listening on: http://localhost:8080
+Application started. Press CTRL+C to shut down.
+Before the mainHandler: /
+Inside mainHandler
+After the mainHandler
+</pre></div>
+</div>
+<p><strong>全局中间件</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;github.com/kataras/iris&quot;</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    
+    <span class="c1">// 最先执行</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Use</span><span class="p">(</span><span class="nx">before</span><span class="p">)</span>
+    
+    <span class="c1">// 最后执行</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Done</span><span class="p">(</span><span class="nx">after</span><span class="p">)</span>
+
+    <span class="c1">// 注册路由</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">indexHandler</span><span class="p">)</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/contact&quot;</span><span class="p">,</span> <span class="nx">contactHandler</span><span class="p">)</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">before</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+     <span class="c1">// [...]</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">after</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// [...]</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">indexHandler</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;h1&gt;Index&lt;/h1&gt;&quot;</span><span class="p">)</span>
+
+    <span class="c1">// 执行 `Done` 注册的 after</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Next</span><span class="p">()</span> 
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">contactHandler</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;h1&gt;Contact&lt;/h1&gt;&quot;</span><span class="p">)</span>
+
+     <span class="c1">// 执行 `Done` 注册的 after</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">Next</span><span class="p">()</span> 
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>探索</strong></p>
+<p>你可以去看一下一些实用的源代码进行学习</p>
+<p>| Middleware | Example |
+| ———–|————-|
+| <a class="reference external" href="basicauth">basic authentication</a> | <a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/authentication/basicauth">iris/_examples/authentication/basicauth</a> |
+| <a class="reference external" href="recaptcha">Google reCAPTCHA</a> | <a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/miscellaneous/recaptcha">iris/_examples/miscellaneous/recaptcha</a> |
+| <a class="reference external" href="i18n">localization and internationalization</a> | <a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/miscellaneous/i18n">iris/_examples/miscellaneous/i81n</a> |
+| <a class="reference external" href="logger">request logger</a> | <a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/http_request/request-logger">iris/_examples/http_request/request-logger</a> |
+| <a class="reference external" href="pprof">profiling (pprof)</a> | <a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/miscellaneous/pprof">iris/_examples/miscellaneous/pprof</a> |
+| <a class="reference external" href="recover">recovery</a> | <a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/miscellaneous/recover">iris/_examples/miscellaneous/recover</a> |</p>
+<p>一些真正帮助您完成特定任务的中间件</p>
+<p>| Middleware | Description | Example |
+| ———–|——–|————-|
+| <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/jwt">jwt</a> | Middleware checks for a JWT on the <code class="docutils literal notranslate"><span class="pre">Authorization</span></code> header on incoming requests and decodes it. | <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/jwt/_example">iris-contrib/middleware/jwt/_example</a> |
+| <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/cors">cors</a> | HTTP Access Control. | <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/cors/_example">iris-contrib/middleware/cors/_example</a> |
+| <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/secure">secure</a> | Middleware that implements a few quick security wins. | <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/secure/_example/main.go">iris-contrib/middleware/secure/_example</a> |
+| <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/tollboothic">tollbooth</a> | Generic middleware to rate-limit HTTP requests. | <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/tollbooth/_examples/limit-handler">iris-contrib/middleware/tollbooth/_examples/limit-handler</a> |
+| <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/cloudwatch">cloudwatch</a> |  AWS cloudwatch metrics middleware. |<a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/cloudwatch/_example">iris-contrib/middleware/cloudwatch/_example</a> |
+| <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/newrelic">new relic</a> | Official <a class="reference external" href="https://github.com/newrelic/go-agent">New Relic Go Agent</a>. | <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/newrelic/_example">iris-contrib/middleware/newrelic/_example</a> |
+| <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/prometheus">prometheus</a>| Easily create metrics endpoint for the <a class="reference external" href="http://prometheus.io">prometheus</a> instrumentation tool | <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/prometheus/_example">iris-contrib/middleware/prometheus/_example</a> |
+| <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/casbin">casbin</a>| An authorization library that supports access control models like ACL, RBAC, ABAC | <a class="reference external" href="https://github.com/iris-contrib/middleware/tree/master/casbin/_examples">iris-contrib/middleware/casbin/_examples</a> |</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="wrapping-the-router">
+<span id="wrapping-the-router"></span><h2>Wrapping the Router<a class="headerlink" href="#wrapping-the-router" title="永久链接至标题">¶</a></h2>
+<p>非常罕见，您可能永远不需要它，但无论如何您都需要它。</p>
+<p>有时您需要覆盖或决定是否将在传入请求上执行路由，如果您以前有过使用 <code class="docutils literal notranslate"><span class="pre">net/http</span></code> 和其他Web框架的经验，
+那么这个函数将对您很熟悉（它具有 net/http 中间件的形式，但它不接受下一个处理，而是接受路由作为要执行的功能）</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// WrapperFunc is used as an expected input parameter signature</span>
+<span class="c1">// for the WrapRouter. It&#39;s a &quot;low-level&quot; signature which is compatible</span>
+<span class="c1">// with the net/http.</span>
+<span class="c1">// It&#39;s being used to run or no run the router based on a custom logic.</span>
+<span class="kd">type</span> <span class="nx">WrapperFunc</span> <span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">firstNextIsTheRouter</span> <span class="nx">http</span><span class="p">.</span><span class="nx">HandlerFunc</span><span class="p">)</span>
+
+<span class="c1">// WrapRouter adds a wrapper on the top of the main router.</span>
+<span class="c1">// Usually it&#39;s useful for third-party middleware</span>
+<span class="c1">// when need to wrap the entire application with a middleware like CORS.</span>
+<span class="c1">//</span>
+<span class="c1">// Developers can add more than one wrappers,</span>
+<span class="c1">// those wrappers&#39; execution comes from last to first.</span>
+<span class="c1">// That means that the second wrapper will wrap the first, and so on.</span>
+<span class="c1">//</span>
+<span class="c1">// Before build.</span>
+<span class="kd">func</span> <span class="nx">WrapRouter</span><span class="p">(</span><span class="nx">wrapperFunc</span> <span class="nx">WrapperFunc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Iris的路由根据 <code class="docutils literal notranslate"><span class="pre">HTTP</span> <span class="pre">Method</span></code> 搜索其路由，路由装配器可以覆盖该行为并执行自定义代码。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;net/http&quot;</span>
+    <span class="s">&quot;strings&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// In this example you&#39;ll just see one use case of .WrapRouter.</span>
+<span class="c1">// You can use the .WrapRouter to add custom logic when or when not the router should</span>
+<span class="c1">// be executed in order to execute the registered routes&#39; handlers.</span>
+<span class="c1">//</span>
+<span class="c1">// To see how you can serve files on root &quot;/&quot; without a custom wrapper</span>
+<span class="c1">// just navigate to the &quot;file-server/single-page-application&quot; example.</span>
+<span class="c1">//</span>
+<span class="c1">// This is just for the proof of concept, you can skip this tutorial if it&#39;s too much for you.</span>
+
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">OnErrorCode</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">StatusNotFound</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;b&gt;Resource Not found&lt;/b&gt;&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">ServeFile</span><span class="p">(</span><span class="s">&quot;./public/index.html&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/profile/{username}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;Hello %s&quot;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;username&quot;</span><span class="p">))</span>
+    <span class="p">})</span>
+
+    <span class="c1">// serve files from the root &quot;/&quot;, if we used .StaticWeb it could override</span>
+    <span class="c1">// all the routes because of the underline need of wildcard.</span>
+    <span class="c1">// Here we will see how you can by-pass this behavior</span>
+    <span class="c1">// by creating a new file server handler and</span>
+    <span class="c1">// setting up a wrapper for the router(like a &quot;low-level&quot; middleware)</span>
+    <span class="c1">// in order to manually check if we want to process with the router as normally</span>
+    <span class="c1">// or execute the file server handler instead.</span>
+
+    <span class="c1">// use of the .StaticHandler</span>
+    <span class="c1">// which is the same as StaticWeb but it doesn&#39;t</span>
+    <span class="c1">// registers the route, it just returns the handler.</span>
+    <span class="nx">fileServer</span> <span class="o">:=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">StaticHandler</span><span class="p">(</span><span class="s">&quot;./public&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+
+    <span class="c1">// wrap the router with a native net/http handler.</span>
+    <span class="c1">// if url does not contain any &quot;.&quot; (i.e: .css, .js...)</span>
+    <span class="c1">// (depends on the app , you may need to add more file-server exceptions),</span>
+    <span class="c1">// then the handler will execute the router that is responsible for the</span>
+    <span class="c1">// registered routes (look &quot;/&quot; and &quot;/profile/{username}&quot;)</span>
+    <span class="c1">// if not then it will serve the files based on the root &quot;/&quot; path.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">WrapRouter</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">router</span> <span class="nx">http</span><span class="p">.</span><span class="nx">HandlerFunc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">path</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">Path</span>
+        <span class="c1">// Note that if path has suffix of &quot;index.html&quot; it will auto-permant redirect to the &quot;/&quot;,</span>
+        <span class="c1">// so our first handler will be executed instead.</span>
+
+        <span class="k">if</span> <span class="p">!</span><span class="nx">strings</span><span class="p">.</span><span class="nx">Contains</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="s">&quot;.&quot;</span><span class="p">)</span> <span class="p">{</span> 
+            <span class="c1">// if it&#39;s not a resource then continue to the router as normally. &lt;-- IMPORTANT</span>
+            <span class="nx">router</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+        <span class="c1">// acquire and release a context in order to use it to execute</span>
+        <span class="c1">// our file server</span>
+        <span class="c1">// remember: we use net/http.Handler because here we are in the &quot;low-level&quot;, before the router itself.</span>
+        <span class="nx">ctx</span> <span class="o">:=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">ContextPool</span><span class="p">.</span><span class="nx">Acquire</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+        <span class="nx">fileServer</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+        <span class="nx">app</span><span class="p">.</span><span class="nx">ContextPool</span><span class="p">.</span><span class="nx">Release</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="c1">// http://localhost:8080</span>
+    <span class="c1">// http://localhost:8080/index.html</span>
+    <span class="c1">// http://localhost:8080/app.js</span>
+    <span class="c1">// http://localhost:8080/css/main.css</span>
+    <span class="c1">// http://localhost:8080/profile/anyusername</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+
+    <span class="c1">// Note: In this example we just saw one use case,</span>
+    <span class="c1">// you may want to .WrapRouter or .Downgrade in order to bypass the iris&#39; default router, i.e:</span>
+    <span class="c1">// you can use that method to setup custom proxies too.</span>
+    <span class="c1">//</span>
+    <span class="c1">// If you just want to serve static files on other path than root</span>
+    <span class="c1">// you can just use the StaticWeb, i.e:</span>
+    <span class="c1">//                          .StaticWeb(&quot;/static&quot;, &quot;./public&quot;)</span>
+    <span class="c1">// ________________________________requestPath, systemPath</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这里没有太多要说的，它只是一个函数包装器，它接受本机响应编写和请求以及下一个处理程序，
+即Iris的路由本身，无论是否被调用它是否被执行，它是整个中间件路由。</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="错误处理.html" class="btn btn-neutral float-right" title="错误处理" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="配置.html" class="btn btn-neutral" title="配置" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, TristeYen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'10.6.5',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+安装
+=============
+
+唯一的要求是Go编程语言，至少1.8版本，但强烈建议使用1.9。
+
+(```)
+	go get -u github.com/kataras/iris
+(```)
+
+- 利用iris的 vendor directory 特性，您可以获得真正可重现的构建，因为这种方法可以防止上游重命名和删除。
+
+Q：Go 1.8和Go 1.9 Iris之间的主要区别是什么？
+A：Go 1.9支持类型别名，Iris已经为Go 1.8.3做好了准备，它有一个文件，kataras/iris/context.go 具有对Go 1.9的限制构建访问权限，全部在同一个地方，声明了Iris的所有类型别名。
+
+在Go 1.9之前，你必须导入“github.com/kataras/iris/context”来创建一个Handler：
+
+(```)
+	package main
+
+	import (
+		"github.com/kataras/iris"
+		"github.com/kataras/iris/context"
+	)
+
+	func main() {
+		app := iris.New()
+		app.Get("/", func(ctx context.Context){})
+		app.Run(iris.Addr(":8000"))
+	}
+(```)
+
+从Go 1.9开始，在您不必导入之后，您可以选择性地执行此操作：
+
+(```)
+	package main
+
+	import (
+		"github.com/kataras/iris"
+	)
+
+	func mian() {
+		app := iris.New()
+		app.Get("/", func(ctx context.Context){})
+		app.Run(iris.Addr(":8000"))
+	}
+(```)
+
+对于 kataras/iris/core/router/APIBuilder#PartyFunc 也是一样的
+
+(```)
+	//而不是导入 router package 并使用router.Party
+	app.PartyFunc("/cpanel", func(child iris.Party) {
+		child.Get("/", func(ctx iris.Context){})
+	})
+	//或者
+	cpanel := app.Part("/cpanel")
+	cpanel.Get("/", func(ctx iris.context){})
+(```)

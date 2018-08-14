@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Hosts &mdash; iris-cookbook 10.6.5 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="配置" href="配置.html" />
+    <link rel="prev" title="开始使用" href="开始使用.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iris-cookbook
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="简介.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="特性.html">特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="版本.html">版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="安装.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="开始使用.html">开始使用</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hosts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="配置.html">配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Routing.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="错误处理.html">错误处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MVC.html">MVC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="View.html">View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sessions.html">Sessions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Websockets.html">Websockets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iris-cookbook</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Hosts</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Host.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="hosts">
+<span id="hosts"></span><h1>Hosts<a class="headerlink" href="#hosts" title="永久链接至标题">¶</a></h1>
+<p><strong>监听服务</strong></p>
+<p>你可以启动服务监听任何类型的 <code class="docutils literal notranslate"><span class="pre">net.Listener</span></code> 甚至 <code class="docutils literal notranslate"><span class="pre">http.Server</span></code> 实例， 最后通过 <code class="docutils literal notranslate"><span class="pre">Run</span></code>方法初始化服务。</p>
+<p>Go开发人员启动服务最常用方法是传递“hostname：ip”形式的网络地址。在iris里，我们使用 <code class="docutils literal notranslate"><span class="pre">iris.Addr</span></code> 这是一个 <code class="docutils literal notranslate"><span class="pre">iris.Runner</span></code> 类型。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 监听 TCP 的网络地址 0.0.0.0:8080</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>有时您在应用程序的其他位置创建了标准的 <code class="docutils literal notranslate"><span class="pre">net/http</span></code> 服务，并希望使用它来为 Iris Web 应用程序提供服务</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 与之前相同，但使用自定义的 `http.Server`，也可能在其他地方使用</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span><span class="nx">Addr</span><span class="p">:</span><span class="s">&quot;:8080&quot;</span><span class="p">}))</span>
+</pre></div>
+</div>
+<p>最高级的用法是创建自定义或标准的 <code class="docutils literal notranslate"><span class="pre">net.Listener</span></code> 并将其传递给 <code class="docutils literal notranslate"><span class="pre">app.Run</span></code></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 使用自定义的 net.Listener</span>
+<span class="nx">l</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nx">Listen</span><span class="p">(</span><span class="s">&quot;tcp4&quot;</span><span class="p">,</span> <span class="s">&quot;:8080&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Listener</span><span class="p">(</span><span class="nx">l</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>一个更完整的示例，使用仅限unix的套接字文件功能</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;os&quot;</span>
+    <span class="s">&quot;net&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="c1">// UNIX socket</span>
+    <span class="k">if</span> <span class="nx">errOs</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Remove</span><span class="p">(</span><span class="nx">socketFile</span><span class="p">);</span> <span class="nx">errOs</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="p">!</span><span class="nx">os</span><span class="p">.</span><span class="nx">IsNotExist</span><span class="p">(</span><span class="nx">errOs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">app</span><span class="p">.</span><span class="nx">Logger</span><span class="p">().</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">errOs</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">l</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nx">Listen</span><span class="p">(</span><span class="s">&quot;unix&quot;</span><span class="p">,</span> <span class="nx">socketFile</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">app</span><span class="p">.</span><span class="nx">Logger</span><span class="p">().</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Chmod</span><span class="p">(</span><span class="nx">socketFile</span><span class="p">,</span> <span class="nx">mode</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">app</span><span class="p">.</span><span class="nx">Logger</span><span class="p">().</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Listener</span><span class="p">(</span><span class="nx">l</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>UNIX和BSD主机可以优先考虑重用端口功能</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="cm">/*</span>
+<span class="cm">     * Package tcplisten 提供各种定制的 TCP net.Listener</span>
+<span class="cm">     * 性能相关选项：</span>
+<span class="cm">     *     - SO_REUSEPORT 在多CP​​U服务器上此选项允许线性扩展服务器性能</span>
+<span class="cm">     *       See https://www.nginx.com/blog/socket-sharding-nginx-release-1-9-1/ for details.</span>
+<span class="cm">     *</span>
+<span class="cm">     *     - TCP_DEFER_ACCEPT This option expects the server reads from the accepted connection before writing to them.</span>
+<span class="cm">     *</span>
+<span class="cm">     *     - TCP_FASTOPEN. See https://lwn.net/Articles/508865/ for details.</span>
+<span class="cm">     */</span>
+    <span class="s">&quot;github.com/valyala/tcplisten&quot;</span>
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// go get github.com/valyala/tcplisten</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;&lt;h1&gt;Hello World!&lt;/h1&gt;&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">listenerCfg</span> <span class="o">:=</span> <span class="nx">tcplisten</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+        <span class="nx">ReusePort</span><span class="p">:</span>   <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">DeferAccept</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">FastOpen</span><span class="p">:</span>    <span class="kc">true</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nx">l</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">listenerCfg</span><span class="p">.</span><span class="nx">NewListener</span><span class="p">(</span><span class="s">&quot;tcp&quot;</span><span class="p">,</span> <span class="s">&quot;:8080&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">app</span><span class="p">.</span><span class="nx">Logger</span><span class="p">().</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Listener</span><span class="p">(</span><span class="nx">l</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>HTTP/2 and Secure</strong></p>
+<p>如果您已签名文件密钥，则可以基于这些认证密钥使用 <code class="docutils literal notranslate"><span class="pre">iris.TLS</span></code> 服务 <code class="docutils literal notranslate"><span class="pre">https</span></code></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// TLS using files</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">TLS</span><span class="p">(</span><span class="s">&quot;127.0.0.1:443&quot;</span><span class="p">,</span> <span class="s">&quot;mycert.cert&quot;</span><span class="p">,</span> <span class="s">&quot;mykey.key&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>你的应用程序准备好生产时应该使用的方法是<code class="docutils literal notranslate"><span class="pre">iris.AutoTLS</span></code>，它可以通过https://letsencrypt.org免费提供自动认证启动安全服务器</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Automatic TLS</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">AutoTLS</span><span class="p">(</span><span class="s">&quot;:443&quot;</span><span class="p">,</span> <span class="s">&quot;example.com&quot;</span><span class="p">,</span> <span class="s">&quot;admin@example.com&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Any iris.Runner</strong></p>
+<p>有时候你需要一些非常特别的监听方式并不像 <code class="docutils literal notranslate"><span class="pre">net.Listener</span></code> 这类型的，你可以通过<code class="docutils literal notranslate"><span class="pre">iris.Raw</span></code>做到这一点，但你的为此方法负责。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Using any func() error,</span>
+<span class="c1">// the responsibility of starting up a listener is up to you with this way,</span>
+<span class="c1">// 为了简单起见，我们使用 net/http package 的函数 ListenAndServe </span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Raw</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span><span class="nx">Addr</span><span class="p">:</span><span class="s">&quot;:8080&quot;</span><span class="p">}).</span><span class="nx">ListenAndServe</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Host 配置器</strong></p>
+<p>上述的所有监听形式都接受最后一个可选参数 <code class="docutils literal notranslate"><span class="pre">func(*iris.Supervisor)</span></code> 这用于为通过这些函数传递的特定 hosts 添加配置程序。</p>
+<p>例如，假设我们要添加一个在服务器关闭时触发的回调</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">h</span> <span class="o">*</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Supervisor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">h</span><span class="p">.</span><span class="nx">RegisterOnShutdown</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nb">println</span><span class="p">(</span><span class="s">&quot;server terminated&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">}))</span>
+</pre></div>
+</div>
+<p>您甚至可以在<code class="docutils literal notranslate"><span class="pre">app.Run</span></code>方法之前执行此操作，但区别在于这些 hosts 配置程序将执行到您可能用于为Web应用程序提供服务的所有 hosts（通过app.NewHost我们会在一分钟内看到）</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">ConfigureHost</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">h</span> <span class="o">*</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Supervisor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">h</span><span class="p">.</span><span class="nx">RegisterOnShutdown</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nb">println</span><span class="p">(</span><span class="s">&quot;server terminated&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>在<code class="docutils literal notranslate"><span class="pre">Run</span></code>方法之后，<code class="docutils literal notranslate"><span class="pre">Application＃Hosts</span></code>字段可以访问为您的应用程序提供服务的所有 hosts。</p>
+<p>但最常见的情况是您可能需要在<code class="docutils literal notranslate"><span class="pre">app.Run</span></code>方法之前访问 hosts，有两种获取访问 host supervisor,的方法，请参阅下文。</p>
+<p>我们已经看到了如何通过<code class="docutils literal notranslate"><span class="pre">app.Run</span></code>或<code class="docutils literal notranslate"><span class="pre">app.ConfigureHost</span></code>的第二个参数配置所有应用程序的 hosts。
+还有一种方法更适合简单场景，使用<code class="docutils literal notranslate"><span class="pre">app.NewHost</span></code>创建新主机并使用其<code class="docutils literal notranslate"><span class="pre">Serve</span></code>或<code class="docutils literal notranslate"><span class="pre">Listen</span></code>功能之一通过<code class="docutils literal notranslate"><span class="pre">iris#Raw</span></code> Runner启动应用程序。</p>
+<p>请注意，这种方式需要额外导入<code class="docutils literal notranslate"><span class="pre">net/http</span></code>包。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">h</span> <span class="o">:=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">NewHost</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span><span class="nx">Addr</span><span class="p">:</span><span class="s">&quot;:8080&quot;</span><span class="p">})</span>
+<span class="nx">h</span><span class="p">.</span><span class="nx">RegisterOnShutdown</span><span class="p">(</span><span class="kd">func</span><span class="p">(){</span>
+    <span class="nb">println</span><span class="p">(</span><span class="s">&quot;server terminated&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Raw</span><span class="p">(</span><span class="nx">h</span><span class="p">.</span><span class="nx">ListenAndServe</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>多Hosts</strong></p>
+<p>您可以使用多个服务器为您的 Iris Web 应用程序提供服务，<code class="docutils literal notranslate"><span class="pre">iris.Router</span></code>与<code class="docutils literal notranslate"><span class="pre">net/http/Handler</span></code>功能兼容，
+因为你可以理解，它可以在任何<code class="docutils literal notranslate"><span class="pre">net/http</span></code>服务器上使用，但是有一种更简单的方法，通过使用<code class="docutils literal notranslate"><span class="pre">app.NewHost</span></code>，
+它是还会复制所有主机配置程序，并关闭<code class="docutils literal notranslate"><span class="pre">app.Shutdown</span></code>上附加到特定Web应用程序的所有主机。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">indexHandler</span><span class="p">)</span>
+
+<span class="c1">// 在不同的goroutine中运行，以便不阻塞主要的“goroutine”。</span>
+<span class="k">go</span> <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="c1">// 启动第二个服务器，它正在监听tcp 0.0.0.0:9090，</span>
+<span class="c1">// 没有“go”关键字，因为我们想要在最后一次服务器运行时阻止。</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">NewHost</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span><span class="nx">Addr</span><span class="p">:</span><span class="s">&quot;:9090&quot;</span><span class="p">}).</span><span class="nx">ListenAndServe</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>优雅的关机</strong></p>
+<p>让我们继续学习如何捕获CONTROL+C/COMMAND+C或unix kill命令并优雅地关闭服务器。
+- 正确关闭CONTROL+C/COMMAND+C或者当发送的kill命令是ENABLED BY-DEFAULT时。</p>
+<p>为了手动管理应用程序中断时要执行的操作，我们必须使用选项WithoutInterruptHandler禁用默认行为并注册新的中断处理程序（全局，跨所有可能的主机）。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;context&quot;</span>
+    <span class="s">&quot;time&quot;</span>
+
+    <span class="s">&quot;github.com/kataras/iris&quot;</span>
+<span class="p">)</span>
+
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="nx">iris</span><span class="p">.</span><span class="nx">RegisterOnInterrupt</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">timeout</span> <span class="o">:=</span> <span class="mi">5</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span>
+        <span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithTimeout</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="nx">timeout</span><span class="p">)</span>
+        <span class="k">defer</span> <span class="nx">cancel</span><span class="p">()</span>
+        <span class="c1">// close all hosts</span>
+        <span class="nx">app</span><span class="p">.</span><span class="nx">Shutdown</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot; &lt;h1&gt;hi, I just exist in order to see if the server is closed&lt;/h1&gt;&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">),</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">WithoutInterruptHandler</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="配置.html" class="btn btn-neutral float-right" title="配置" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="开始使用.html" class="btn btn-neutral" title="开始使用" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, TristeYen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'10.6.5',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

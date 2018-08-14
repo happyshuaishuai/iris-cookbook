@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>特性 &mdash; iris-cookbook 10.6.5 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="版本" href="版本.html" />
+    <link rel="prev" title="简介" href="简介.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iris-cookbook
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="简介.html">简介</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="版本.html">版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="安装.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="开始使用.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Host.html">Hosts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="配置.html">配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Routing.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="错误处理.html">错误处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MVC.html">MVC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="View.html">View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sessions.html">Sessions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Websockets.html">Websockets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iris-cookbook</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>特性</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/特性.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="">
+<span id="id1"></span><h1>特性<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<p><strong>主要特性</strong></p>
+<ul class="simple">
+<li>专注与高性能</li>
+<li>简单流利的API</li>
+<li>高度可定制</li>
+<li>强大的路由和中间件生态系统<ul>
+<li>Iris构建独特的表现路径解释的RESTful APIs</li>
+<li>动态路径参数化或通配符路由与静态路由不冲突</li>
+<li>使用重定向选项从URL中删除尾部斜杠</li>
+<li>虚拟主机和子域变得简单</li>
+<li>分组APIs和静态或者甚至动态子域</li>
+<li><code class="docutils literal notranslate"><span class="pre">net/http</span></code> 和 <code class="docutils literal notranslate"><span class="pre">negroni-like</span></code> 类似的处理程序通过 <code class="docutils literal notranslate"><span class="pre">iris.FromStd</span></code> 兼容</li>
+<li>注册任何自定义的HTTP error处理</li>
+<li>在需要时进行事务和回滚</li>
+<li>在需要时缓存响应</li>
+<li>一个单一功能服务于你的嵌入式 assets，始终和 <code class="docutils literal notranslate"><span class="pre">go-bindata</span></code> 兼容</li>
+<li>HTTP to HTTPS<ul>
+<li>HTTP to HTTPS WWW</li>
+</ul>
+</li>
+<li><a class="reference external" href="https://github.com/kataras/iris/tree/master/_examples/#routing-grouping-dynamic-path-parameters-macros-and-custom-context">了解与您目前所见的不同的原因</a></li>
+<li>新颖的MVC</li>
+</ul>
+</li>
+<li>Context<ul>
+<li>高度可扩展的丰富内容呈现（Markdown，JSON，JSONP，XML ……）</li>
+<li>正文绑定器和发送HTTP响应的便捷功能</li>
+<li>限制请求正文</li>
+<li>提供静态资源或者嵌入式assets</li>
+<li>本地化i18N</li>
+<li>压缩（Gzip…）</li>
+</ul>
+</li>
+<li>认证<ul>
+<li>基本认证</li>
+<li>OAuth，OAuth2支持27个以上的热门网站</li>
+<li>JWT</li>
+</ul>
+</li>
+<li>Server<ul>
+<li>通过TLS提供服务时，自动安装和提供来自<a class="reference external" href="https://letsencrypt.org/">https://letsencrypt.org</a>的证书</li>
+<li>默认情况下正常关闭</li>
+<li>在关机、错误、中断时注册事件</li>
+<li>连接多个服务器，与 <code class="docutils literal notranslate"><span class="pre">net/http＃Server</span></code> 完全兼容</li>
+</ul>
+</li>
+<li>视图系统：支持5个模板引擎。与 <code class="docutils literal notranslate"><span class="pre">html/template</span></code> 模板完全兼容</li>
+<li>HTTP Sessions library[如果你愿意，你仍然可以使用你最喜欢的]</li>
+<li>Websocket library，其API类似于socket.io [如果你愿意，你仍然可以使用你最喜欢的]</li>
+<li>热更新源代码</li>
+<li>集成 Typescript + Web IDE</li>
+</ul>
+<p>Iris是最具特色的网络框架之一，并非所有功能都在这里，也不要指望我在这本gitbook中写下他们所有的用法，
+如果您发现我遗失了某些内容，请移步<a class="reference external" href="https://github.com/kataras/build-a-better-web-together">book repository</a>。</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="版本.html" class="btn btn-neutral float-right" title="版本" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="简介.html" class="btn btn-neutral" title="简介" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, TristeYen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'10.6.5',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

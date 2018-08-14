@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>View &mdash; iris-cookbook 10.6.5 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Sessions" href="Sessions.html" />
+    <link rel="prev" title="MVC" href="MVC.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iris-cookbook
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="简介.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="特性.html">特性</a></li>
+<li class="toctree-l1"><a class="reference internal" href="版本.html">版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="安装.html">安装</a></li>
+<li class="toctree-l1"><a class="reference internal" href="开始使用.html">开始使用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Host.html">Hosts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="配置.html">配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Routing.html">Routing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="错误处理.html">错误处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MVC.html">MVC</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sessions.html">Sessions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Websockets.html">Websockets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iris-cookbook</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>View</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/View.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="view">
+<span id="view"></span><h1>View<a class="headerlink" href="#view" title="永久链接至标题">¶</a></h1>
+<p>Iris支持开箱即用的5个模板引擎，开发人员仍然可以使用任何外部golang模板引擎，
+因为<code class="docutils literal notranslate"><span class="pre">context/context#ResponseWriter()</span></code> 是 <code class="docutils literal notranslate"><span class="pre">io.Writer</span></code>。</p>
+<p>这五个模板引擎都具有通用API的共同特征，如布局，模板功能，特定于派对的布局，部分渲染等。</p>
+<ul class="simple">
+<li>标准的html，它的模板解析器就是 golang.org/pkg/html/template/</li>
+<li>Django，它的模板解析器就是 github.com/flosch/pongo2</li>
+<li>Pug(Jade), 它的模板解析器就是 github.com/Joker/jade</li>
+<li>Handlebars, 它的模板解析器就是 github.com/aymerick/raymond</li>
+<li>Amber,它的模板解析器就是 github.com/eknkc/amber</li>
+</ul>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// file: main.go</span>
+<span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;github.com/kataras/iris&quot;</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="c1">// Load all templates from the &quot;./views&quot; folder</span>
+    <span class="c1">// where extension is &quot;.html&quot; and parse them</span>
+    <span class="c1">// using the standard `html/template` package.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">RegisterView</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;./views&quot;</span><span class="p">,</span> <span class="s">&quot;.html&quot;</span><span class="p">))</span>
+
+    <span class="c1">// Method:    GET</span>
+    <span class="c1">// Resource:  http://localhost:8080</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Bind: {{.message}} with &quot;Hello world!&quot;</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">ViewData</span><span class="p">(</span><span class="s">&quot;message&quot;</span><span class="p">,</span> <span class="s">&quot;Hello world!&quot;</span><span class="p">)</span>
+        <span class="c1">// Render template file: ./views/hello.html</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">View</span><span class="p">(</span><span class="s">&quot;hello.html&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="c1">// Method:    GET</span>
+    <span class="c1">// Resource:  http://localhost:8080/user/42</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/user/{id:long}&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">userID</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Params</span><span class="p">().</span><span class="nx">GetInt64</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">Writef</span><span class="p">(</span><span class="s">&quot;User ID: %d&quot;</span><span class="p">,</span> <span class="nx">userID</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="c1">// Start the server using a network address.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="c">&lt;!-- file: ./views/hello.html --&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Hello Page<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>{{.message}}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<p><strong>Template functions</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;github.com/kataras/iris&quot;</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+
+    <span class="c1">// - standard html  | iris.HTML(...)</span>
+    <span class="c1">// - django         | iris.Django(...)</span>
+    <span class="c1">// - pug(jade)      | iris.Pug(...)</span>
+    <span class="c1">// - handlebars     | iris.Handlebars(...)</span>
+    <span class="c1">// - amber          | iris.Amber(...)</span>
+    <span class="nx">tmpl</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;./templates&quot;</span><span class="p">,</span> <span class="s">&quot;.html&quot;</span><span class="p">)</span>
+
+    <span class="c1">// built&#39;n template funcs are:</span>
+    <span class="c1">//</span>
+    <span class="c1">// - {{ urlpath &quot;mynamedroute&quot; &quot;pathParameter_ifneeded&quot; }}</span>
+    <span class="c1">// - {{ render &quot;header.html&quot; }}</span>
+    <span class="c1">// - {{ render_r &quot;header.html&quot; }} // partial relative path to current page</span>
+    <span class="c1">// - {{ yield }}</span>
+    <span class="c1">// - {{ current }}</span>
+
+    <span class="c1">// register a custom template func.</span>
+    <span class="nx">tmpl</span><span class="p">.</span><span class="nx">AddFunc</span><span class="p">(</span><span class="s">&quot;greet&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">s</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;Greetings &quot;</span> <span class="o">+</span> <span class="nx">s</span> <span class="o">+</span> <span class="s">&quot;!&quot;</span>
+    <span class="p">})</span>
+
+    <span class="c1">// register the view engine to the views, this will load the templates.</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">RegisterView</span><span class="p">(</span><span class="nx">tmpl</span><span class="p">)</span>
+
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">hi</span><span class="p">)</span>
+
+    <span class="c1">// http://localhost:8080</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">hi</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// render the template file &quot;./templates/hi.html&quot;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">View</span><span class="p">(</span><span class="s">&quot;hi.html&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="c">&lt;!-- file: ./templates/hi.html --&gt;</span>
+<span class="p">&lt;</span><span class="nt">b</span><span class="p">&gt;</span>{{greet &quot;kataras&quot;}}<span class="p">&lt;/</span><span class="nt">b</span><span class="p">&gt;</span> <span class="c">&lt;!-- will be rendered as: &lt;b&gt;Greetings kataras!&lt;/b&gt; --&gt;</span>
+</pre></div>
+</div>
+<p><strong>嵌套</strong></p>
+<p>View引擎也支持捆绑（https://github.com/jteeuwen/go-bindata）模板文件,
+<code class="docutils literal notranslate"><span class="pre">go-bindata</span></code>给你两个功能 <code class="docutils literal notranslate"><span class="pre">Assset</span></code> 和 <code class="docutils literal notranslate"><span class="pre">AssetNames</span></code>，这些可以使用<code class="docutils literal notranslate"><span class="pre">.Binary</span></code>函数设置到每个模板引擎。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;github.com/kataras/iris&quot;</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">app</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">New</span><span class="p">()</span>
+    <span class="c1">// $ go get -u github.com/jteeuwen/go-bindata/...</span>
+    <span class="c1">// $ go-bindata ./templates/...</span>
+    <span class="c1">// $ go build</span>
+    <span class="c1">// $ ./embedding-templates-into-app</span>
+    <span class="c1">// html files are not used, you can delete the folder and run the example</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">RegisterView</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">HTML</span><span class="p">(</span><span class="s">&quot;./templates&quot;</span><span class="p">,</span> <span class="s">&quot;.html&quot;</span><span class="p">).</span><span class="nx">Binary</span><span class="p">(</span><span class="nx">Asset</span><span class="p">,</span> <span class="nx">AssetNames</span><span class="p">))</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">hi</span><span class="p">)</span>
+
+    <span class="c1">// http://localhost:8080</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">iris</span><span class="p">.</span><span class="nx">Addr</span><span class="p">(</span><span class="s">&quot;:8080&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">page</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Title</span><span class="p">,</span> <span class="nx">Name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">hi</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//                      {{.Page.Title}} and {{Page.Name}}</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">ViewData</span><span class="p">(</span><span class="s">&quot;Page&quot;</span><span class="p">,</span> <span class="nx">page</span><span class="p">{</span><span class="nx">Title</span><span class="p">:</span> <span class="s">&quot;Hi Page&quot;</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&quot;iris&quot;</span><span class="p">})</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">View</span><span class="p">(</span><span class="s">&quot;hi.html&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这里可以找到一个真实的例子： https://github.com/kataras/iris/tree/master/_examples/view/embedding-templates-into-app.</p>
+<p><strong>Reload</strong></p>
+<p>在每个请求上启用模板的自动重新加载。在开发人员处于开发模式时很有用，因为他们不需要在每个模板编辑时重新启动他们的应用程序。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">pugEngine</span> <span class="o">:=</span> <span class="nx">iris</span><span class="p">.</span><span class="nx">Pug</span><span class="p">(</span><span class="s">&quot;./templates&quot;</span><span class="p">,</span> <span class="s">&quot;.jade&quot;</span><span class="p">)</span>
+<span class="nx">pugEngine</span><span class="p">.</span><span class="nx">Reload</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="c1">// &lt;--- set to true to re-build the templates on each request.</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">RegisterView</span><span class="p">(</span><span class="nx">pugEngine</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Examples</strong></p>
+<ul class="simple">
+<li>Overview</li>
+<li>Hi</li>
+<li>A simple Layout</li>
+<li>Layouts: <code class="docutils literal notranslate"><span class="pre">yield</span></code> and <code class="docutils literal notranslate"><span class="pre">render</span></code> tmpl funcs</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">urlpath</span></code> tmpl func</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">url</span></code> tmpl func</li>
+<li>Inject Data Between Handlers</li>
+<li>Embedding Templates Into App Executable File</li>
+</ul>
+<p>您也可以通过使用<code class="docutils literal notranslate"><span class="pre">context#ResponseWriter</span></code>来提供quicktemplate文件，请查看iris/_examples/http_responsewriter/quicktemplate示例。</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Sessions.html" class="btn btn-neutral float-right" title="Sessions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="MVC.html" class="btn btn-neutral" title="MVC" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, TristeYen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'10.6.5',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
